@@ -19,35 +19,9 @@ dim_theme_question <- teach_pt_appr |>
   filter(!is_theme) |>
   select(theme_no, theme, question_no = code, question = text)
 
-# Remove all aggregated rows where benchmark is NA and question_number does not start with 'Theme'
-to_grain <- function(df) {
-  df |>
-    filter(!is.na(benchmark) & !str_starts(question_number, "Theme")) |>
-    select(-c(num, population, suppression_reason)) |>
-    # Keep only the 95% confidence intervals
-    select(-(matches("_(lower|upper)ci\\d+$") & !ends_with("ci95"))) |>
-    # 90% confidence that the true difference is beyond the ±2.5pp materiality threshold
-    mutate(benchmark_category = case_when(
-      is.na(materially_above_bench) ~ NA,
-      materially_above_bench >= 90 ~ "Materially above benchmark",
-      materially_below_bench >= 90 ~ "Materially below benchmark",
-      .default = "Broadly in line with benchmark"
-    )) |>
-    mutate(question_number = str_extract(question_number, "^[^:]+")) |>
-    rename(question_no = question_number) |>
-    mutate(cah_code = replace_na(cah_code, "ALL")) |>
-    left_join(select(dim_theme_question, question_no, theme_no), by = join_by(question_no)) |>
-    relocate(theme_no, .before = question_no)
-}
-
-teach_pt_appr_grain <- to_grain(teach_pt_appr)
-teach_ft_grain <- to_grain(teach_ft)
-
-# Combine full-time with part-time/apprenticeship; mode_of_study tells them apart
-fact_teach <- bind_rows(teach_ft_grain, teach_pt_appr_grain)
 
 # Provider dimension: one row per ukprn
-dim_provider <- fact_teach |>
+dim_provider <- teach_pt_appr |>
   distinct(ukprn, provider_name) |>
   arrange(provider_name)
 
@@ -81,13 +55,53 @@ dim_cah <- dim_cah |>
   arrange(cah_code)
 
 # Dim mode
-dim_mode <- fact_teach |>
+dim_mode <- bind_rows(teach_ft, teach_pt_appr) |>
   distinct(mode_of_study)
 
-dim_level <- fact_teach |>
-  distinct(level_of_study)
+dim_level <- bind_rows(teach_ft, teach_pt_appr) |>
+  distinct(level_of_study) |> 
+  filter(level_of_study != "All undergraduates")
 
-# Parquet keeps column types and is much smaller for the large fact table
+# Remove all aggregated rows where benchmark is NA and question_number does not start with 'Theme'
+to_grain <- function(df) {
+  df |>
+    filter(!is.na(benchmark) & !str_starts(question_number, "Theme")) |>
+    # Drop published totals: keep CAH3 subjects and specific levels/modes only
+    filter(
+      !str_starts(level_of_study, "All"),
+      cah_name != "All subjects",
+      subject_level == "CAH3"
+    ) |>
+    select(-c(num, population, suppression_reason)) |>
+    # Keep only the 95% confidence intervals
+    select(-(matches("_(lower|upper)ci\\d+$") & !ends_with("ci95"))) |>
+    # 90% confidence that the true difference is beyond the ±2.5pp materiality threshold
+    mutate(benchmark_category = case_when(
+      is.na(materially_above_bench) ~ NA,
+      materially_above_bench >= 90 ~ "Materially above benchmark",
+      materially_below_bench >= 90 ~ "Materially below benchmark",
+      .default = "Broadly in line with benchmark"
+    )) |>
+    mutate(question_number = str_extract(question_number, "^[^:]+")) |>
+    rename(question_no = question_number) |>
+    mutate(cah_code = replace_na(cah_code, "ALL")) |>
+    # CAH1/CAH2 parents of each CAH3 subject
+    left_join(
+      select(dim_cah, cah_code, cah1_code, cah1_name, cah2_code, cah2_name),
+      by = join_by(cah_code)
+    ) |>
+    relocate(cah1_code, cah1_name, cah2_code, cah2_name, .before = cah_code) |>
+    left_join(select(dim_theme_question, question_no, theme_no), by = join_by(question_no)) |>
+    relocate(theme_no, .before = question_no)
+}
+
+teach_pt_appr_grain <- to_grain(teach_pt_appr)
+teach_ft_grain <- to_grain(teach_ft)
+
+# Combine full-time with part-time/apprenticeship; mode_of_study tells them apart
+fact_teach <- bind_rows(teach_ft_grain, teach_pt_appr_grain)
+
+# # Parquet keeps column types and is much smaller for the large fact table
 arrow::write_parquet(fact_teach, "data/clean/fact_teach.parquet")
 
 list(

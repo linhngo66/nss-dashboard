@@ -6,12 +6,12 @@ Context for the Power BI model built on National Student Survey (NSS) results pu
 
 | Table | File | Type | Rows | Key |
 |---|---|---|---|---|
-| `fact_teach` | `fact_teach.parquet` | Fact | 789,187 | `ukprn` + `mode_of_study` + `level_of_study` + `cah_code` + `question_no` |
+| `fact_teach` | `fact_teach.parquet` | Fact | TBC (re-run `clean.R`) | `ukprn` + `mode_of_study` + `level_of_study` + `cah_code` + `question_no` |
 | `dim_provider` | `dim_provider.csv` | Dimension | 434 | `ukprn` |
 | `dim_cah` | `dim_cah.csv` | Dimension | 220 | `cah_code` |
 | `dim_theme_question` | `dim_theme_question.csv` | Dimension | 34 | `question_no` |
 | `dim_mode` | `dim_mode.csv` | Dimension | 3 | `mode_of_study` |
-| `dim_level` | `dim_level.csv` | Dimension | 4 | `level_of_study` |
+| `dim_level` | `dim_level.csv` | Dimension | 3 | `level_of_study` |
 
 ## Relationships
 
@@ -29,17 +29,12 @@ All relationships are many-to-one from the fact table, single-direction (dimensi
 
 **One row = one published result** for a provider × mode of study × level of study × subject (CAH code) × question.
 
-The fact table contains **published aggregate rows alongside their breakdowns** on two axes. Summing across levels of either axis double-counts respondents.
-
-| Axis | Total value | Breakdown values |
-|---|---|---|
-| Subject (`dim_cah[subject_level]`) | `All subjects` | `CAH1` ⊃ `CAH2` ⊃ `CAH3` (nested) |
-| Level of study (`dim_level[level_of_study]`) | `All undergraduates` | `First degree`, `Other undergraduate`, `Undergraduate with postgraduate component` |
+The fact table holds **only the most detailed published breakdowns**: CAH3 subjects and the specific levels of study (`First degree`, `Other undergraduate`, `Undergraduate with postgraduate component`). The published totals (`All subjects`, CAH1, CAH2 and `All undergraduates`) are removed in `to_grain()`, so rows no longer double-count across the subject or level axis.
 
 Rules for the report:
 
-- **Make the `subject_level` and `level_of_study` slicers single-select** (with a default such as `All subjects` / `All undergraduates`). Guard additive measures with `HASONEVALUE()` on both.
-- **Breakdown rows do not sum to their totals.** Small groups are not published, so the published children cover only part of the total (e.g. part-time/apprenticeship CAH1 rows cover ~75% of `All subjects` responses; level breakdowns ~83% of `All undergraduates`). Always use the published total row rather than rolling up children.
+- **Rolled-up counts understate the true totals.** Small groups are not published, so summing CAH3 or level rows covers only part of each provider's students (the gap is larger for part-time and apprenticeship). Label any roll-up accordingly.
+- **Roll subjects up with `dim_cah`** (`cah1_name` → `cah2_name` → `cah_name`); `dim_cah` still lists every level so the hierarchy is complete.
 - **Never sum or average percentages** (`positivity_measure`, `benchmark`, `difference`, CIs, `materially_*`). When one visual cell covers exactly one fact row, show the value directly (e.g. `MAX()`). To combine several rows, weight positivity by `number_responses`; benchmarks and CIs cannot be combined.
 - Rows without a published benchmark (small or suppressed groups, and the aggregate Theme rows) were removed during cleaning.
 
@@ -51,9 +46,11 @@ Rules for the report:
 | `provider_name` | text | Provider name (denormalised; prefer `dim_provider`). |
 | `mode_of_study` | text | FK → `dim_mode`. |
 | `level_of_study` | text | FK → `dim_level`. See aggregation rules. |
-| `subject_level` | text | `All subjects`, `CAH1`, `CAH2`, `CAH3` (denormalised; prefer `dim_cah`). |
-| `cah_code` | text | Subject code. `ALL` for All subjects. FK → `dim_cah`. |
-| `cah_name` | text | Subject name; blank for `ALL` rows (denormalised; prefer `dim_cah`). |
+| `subject_level` | text | Always `CAH3` (denormalised; prefer `dim_cah`). |
+| `cah1_code`, `cah1_name` | text | CAH1 parent of the subject (denormalised from `dim_cah`). |
+| `cah2_code`, `cah2_name` | text | CAH2 parent of the subject (denormalised from `dim_cah`). |
+| `cah_code` | text | CAH3 subject code. FK → `dim_cah`. |
+| `cah_name` | text | Subject name (denormalised; prefer `dim_cah`). |
 | `theme_no` | number | Theme number 1–7 (denormalised from `dim_theme_question`; blank for questions outside a theme). |
 | `question_no` | text | Question code (`Q01`–`Q28`, `HC1`–`HC6`). FK → `dim_theme_question`. |
 | `number_responses` | number | Respondents who answered the question. Can be fractional: students on multi-subject courses are split across subjects. |
@@ -97,9 +94,9 @@ The modes are separate populations with no "all modes" total, so summing across 
 
 | Column | Type | Description |
 |---|---|---|
-| `level_of_study` | text | Primary key. `All undergraduates` (total), `First degree`, `Other undergraduate`, `Undergraduate with postgraduate component`. |
+| `level_of_study` | text | Primary key. `First degree`, `Other undergraduate`, `Undergraduate with postgraduate component`. |
 
-`All undergraduates` is the published total of the other three. Use as a single-select slicer (see aggregation rules).
+The published `All undergraduates` total is excluded (see aggregation rules).
 
 ## `dim_cah`
 
@@ -109,7 +106,7 @@ Common Aggregation Hierarchy (CAH) subject classification. One row per code at e
 |---|---|---|
 | `cah_code` | text | Primary key. `ALL`, `CAH02` (CAH1), `CAH02-04` (CAH2), `CAH02-04-01` (CAH3). |
 | `cah_name` | text | Subject name (`All subjects` for `ALL`). |
-| `subject_level` | text | `All subjects`, `CAH1` (21 codes), `CAH2` (35), `CAH3` (163). Use as a single-select slicer. |
+| `subject_level` | text | `All subjects`, `CAH1` (21 codes), `CAH2` (35), `CAH3` (163). Only CAH3 codes appear in `fact_teach`; the other levels are kept for the hierarchy. |
 | `parent_cah_code` | text | Code one level up. CAH1 → `ALL`; blank for `ALL`. For parent-child DAX (`PATH()`). |
 | `cah1_code`, `cah1_name` | text | CAH1 ancestor (self for CAH1 rows). |
 | `cah2_code`, `cah2_name` | text | CAH2 ancestor (self for CAH2 rows; blank for CAH1). |

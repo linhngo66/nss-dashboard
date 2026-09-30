@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "nss-dashboard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "d399d990-fd6e-4d23-83ec-d644ac71d9a6"
+  }
+}

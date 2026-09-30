@@ -1,0 +1,20 @@
+relationship fact_teach_ukprn_dim_provider_ukprn
+	fromColumn: fact_teach.ukprn
+	toColumn: dim_provider.ukprn
+
+relationship fact_teach_cah_code_dim_cah_cah_code
+	fromColumn: fact_teach.cah_code
+	toColumn: dim_cah.cah_code
+
+relationship fact_teach_question_no_dim_theme_question_question_no
+	fromColumn: fact_teach.question_no
+	toColumn: dim_theme_question.question_no
+
+relationship fact_teach_mode_of_study_dim_mode_mode_of_study
+	fromColumn: fact_teach.mode_of_study
+	toColumn: dim_mode.mode_of_study
+
+relationship fact_teach_level_of_study_dim_level_level_of_study
+	fromColumn: fact_teach.level_of_study
+	toColumn: dim_level.level_of_study
+

@@ -1,0 +1,88 @@
+/// Common Aggregation Hierarchy subject classification, one row per code at every level (ALL, CAH1, CAH2, CAH3).
+table dim_cah
+	lineageTag: 993aea75-35de-4c24-afe3-eb89a1776c91
+
+	/// Subject code. Primary key. ALL = All subjects.
+	column cah_code
+		dataType: string
+		isKey
+		lineageTag: 1ab841da-dd5f-4d3f-89b3-74bb2789d078
+		summarizeBy: none
+		sourceColumn: cah_code
+
+	/// Subject name ('All subjects' for ALL).
+	column cah_name
+		dataType: string
+		lineageTag: 405b76dc-da52-47f6-9e32-a71adf23b4f1
+		summarizeBy: none
+		sourceColumn: cah_name
+
+	/// All subjects, CAH1, CAH2 or CAH3. Use as a single-select slicer.
+	column subject_level
+		dataType: string
+		lineageTag: 437ef7f4-3975-43d5-9aa7-e0fcf9dde678
+		summarizeBy: none
+		sourceColumn: subject_level
+
+	/// Code one level up (CAH1 -> ALL); blank for ALL.
+	column parent_cah_code
+		dataType: string
+		lineageTag: 44ce316b-f1f3-4a8e-8567-973c5de8fd17
+		summarizeBy: none
+		sourceColumn: parent_cah_code
+
+	/// CAH1 ancestor code (self for CAH1 rows).
+	column cah1_code
+		dataType: string
+		lineageTag: 893e9872-e52f-4fb5-9d50-e36481452226
+		summarizeBy: none
+		sourceColumn: cah1_code
+
+	/// CAH2 ancestor code (self for CAH2 rows; blank for CAH1).
+	column cah2_code
+		dataType: string
+		lineageTag: 7c36437b-4506-4b7f-ae0e-e79b948aef96
+		summarizeBy: none
+		sourceColumn: cah2_code
+
+	/// CAH1 ancestor name.
+	column cah1_name
+		dataType: string
+		lineageTag: ff792268-b776-433e-82d7-33bdc950c297
+		summarizeBy: none
+		sourceColumn: cah1_name
+
+	/// CAH2 ancestor name.
+	column cah2_name
+		dataType: string
+		lineageTag: b86cd99a-5b47-48c1-8f85-4369f5d276d9
+		summarizeBy: none
+		sourceColumn: cah2_name
+
+	/// CAH1 > CAH2 > CAH3 subject drill path. Use together with a single-select subject_level filter; never roll children up to recreate a parent total.
+	hierarchy 'Subject hierarchy'
+		lineageTag: 13ecc177-1775-4a15-a7bd-db9fc2598d42
+
+		level CAH1
+			lineageTag: 8a8f2fdf-ef99-448b-8fd7-b413a4a3248c
+			column: cah1_name
+
+		level CAH2
+			lineageTag: e549b8b8-2bf8-4e17-bdbd-db8edfffb46b
+			column: cah2_name
+
+		level Subject
+			lineageTag: 067b63b1-9c49-4ea2-af4a-9087194161d2
+			column: cah_name
+
+	partition dim_cah = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_cah.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Blanks = Table.ReplaceValue(Promoted, "", null, Replacer.ReplaceValue, {"parent_cah_code", "cah1_code", "cah2_code", "cah1_name", "cah2_name"}),
+				    Typed = Table.TransformColumnTypes(Blanks, {{"cah_code", type text}, {"cah_name", type text}, {"subject_level", type text}, {"parent_cah_code", type text}, {"cah1_code", type text}, {"cah2_code", type text}, {"cah1_name", type text}, {"cah2_name", type text}})
+				in
+				    Typed
+

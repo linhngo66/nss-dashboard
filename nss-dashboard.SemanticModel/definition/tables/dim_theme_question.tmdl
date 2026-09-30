@@ -1,0 +1,108 @@
+/// NSS questions mapped to the seven themes. HC healthcare placement questions are excluded in Power Query.
+table dim_theme_question
+	lineageTag: f1b240a9-b7fc-48c9-b986-bb68a251c8ec
+
+	/// Theme number 1-7; blank for questions outside the seven themes.
+	column theme_no
+		dataType: int64
+		lineageTag: a4fd07b5-c686-4ce4-944c-02fad9123006
+		summarizeBy: none
+		sourceColumn: theme_no
+
+	/// Theme name.
+	column theme
+		dataType: string
+		lineageTag: 172b28d4-1c61-4ae6-9ae5-b4f13e64d89d
+		summarizeBy: none
+		sourceColumn: theme
+		sortByColumn: theme_sort
+
+	/// Question code. Primary key.
+	column question_no
+		dataType: string
+		isKey
+		lineageTag: a65de5ea-cec6-4a9c-9ab6-f854167bdb92
+		summarizeBy: none
+		sourceColumn: question_no
+
+	/// Full question wording.
+	column question
+		dataType: string
+		lineageTag: 2825ee01-e371-4142-9c99-9a8357bae871
+		summarizeBy: none
+		sourceColumn: question
+		sortByColumn: question_sort
+
+	/// Sort order for questions (numeric part of question_no).
+	column question_sort = VALUE ( MID ( dim_theme_question[question_no], 2, 2 ) )
+		dataType: int64
+		isHidden
+		lineageTag: 18941730-32d4-4239-b757-ca3889588a07
+		summarizeBy: none
+
+	/// Sort order for themes; questions without a theme ('Other questions') sort last as 8.
+	column theme_sort = COALESCE ( dim_theme_question[theme_no], 8 )
+		dataType: int64
+		isHidden
+		lineageTag: fca493e0-9202-4efb-a622-22a5a3f90100
+		summarizeBy: none
+
+	/// Theme name, with questions outside the seven themes (Q25-Q28) grouped as 'Other questions' and sorted last.
+	column theme_label = COALESCE ( dim_theme_question[theme], "Other questions" )
+		dataType: string
+		lineageTag: 9b9c5f70-0a3a-42d5-a34d-eb351a39d15c
+		summarizeBy: none
+		sortByColumn: theme_sort
+
+	/// Short question label (40 characters or fewer) for axes and matrix rows: question code plus a paraphrase of the wording.
+	column question_short =
+			dim_theme_question[question_no] & " " &
+			SWITCH (
+			    dim_theme_question[question_no],
+			    "Q01", "Staff explain things well",
+			    "Q02", "Staff make subject engaging",
+			    "Q03", "Course intellectually stimulating",
+			    "Q04", "Challenged to do my best work",
+			    "Q05", "Explore ideas in depth",
+			    "Q06", "Builds on prior learning",
+			    "Q07", "Bring ideas together across topics",
+			    "Q08", "Directed/independent study balance",
+			    "Q09", "Skills for the future",
+			    "Q10", "Clear marking criteria",
+			    "Q11", "Fair marking and assessment",
+			    "Q12", "Assessments show what I learned",
+			    "Q13", "Feedback received on time",
+			    "Q14", "Feedback helps me improve",
+			    "Q15", "Easy to contact teaching staff",
+			    "Q16", "Staff support my learning",
+			    "Q17", "Course well organised",
+			    "Q18", "Changes to teaching communicated",
+			    "Q19", "IT resources and facilities",
+			    "Q20", "Library resources",
+			    "Q21", "Access to subject resources",
+			    "Q22", "Chances to give feedback",
+			    "Q23", "Student opinions valued",
+			    "Q24", "Feedback clearly acted on",
+			    "Q25", "Students' union representation",
+			    "Q26", "Mental wellbeing info communicated",
+			    "Q27", "Freedom of expression",
+			    "Q28", "Overall satisfaction",
+			    LEFT ( dim_theme_question[question], 36 )
+			)
+		dataType: string
+		lineageTag: 49c330d6-ac88-454b-a1f8-746ed391d088
+		summarizeBy: none
+		sortByColumn: question_sort
+
+	partition dim_theme_question = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_theme_question.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    NoHC = Table.SelectRows(Promoted, each not Text.StartsWith([question_no], "HC")),
+				    Blanks = Table.ReplaceValue(NoHC, "", null, Replacer.ReplaceValue, {"theme_no", "theme"}),
+				    Typed = Table.TransformColumnTypes(Blanks, {{"theme_no", Int64.Type}, {"theme", type text}, {"question_no", type text}, {"question", type text}})
+				in
+				    Typed
+

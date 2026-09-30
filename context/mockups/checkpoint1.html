@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NSS Dashboard Mockup</title>
+<style>
+  :root {
+    --brand: #006DAE;
+    --black: #000000;
+    --text: #3C3C3C;
+    --muted: #8C8C8C;
+    --panel: #F2F2F2;
+    --line: #D9D9D9;
+    --bg: #FFFFFF;
+    --above: #1F4E79;
+    --below: #C45A12;
+    --inline: #A6A6A6;
+    --na: #D9D9D9;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.5 "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 1320px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-weight: 600; font-size: 26px; color: var(--black); margin: 0 0 4px; }
+  h2 { font-weight: 600; font-size: 20px; color: var(--black); margin: 48px 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  h3 { font-weight: 600; font-size: 16px; color: var(--black); margin: 28px 0 6px; }
+  p.lede { color: var(--muted); margin: 0 0 16px; }
+  nav.toc a { color: var(--brand); margin-right: 14px; text-decoration: none; white-space: nowrap; }
+  table.plan { border-collapse: collapse; width: 100%; font-size: 13px; }
+  table.plan th, table.plan td { border-bottom: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  table.plan th { background: var(--panel); font-weight: 600; color: var(--black); }
+  .scroll { overflow-x: auto; }
+  .changes { background: var(--panel); padding: 10px 16px; border-left: 3px solid var(--brand); font-size: 13px; }
+  .changes ul { margin: 4px 0; padding-left: 18px; }
+
+  /* Wireframes */
+  .wf { position: relative; width: 100%; aspect-ratio: 1280 / 720; border: 1px solid var(--line); background: #fff; margin: 8px 0 4px; container-type: inline-size; }
+  .wf .box { position: absolute; border: 1px dashed #9aa5b1; background: #fafafa; padding: 0.5cqw 0.7cqw; overflow: hidden; }
+  .wf .box .t { font-size: max(9px, 1.0cqw); font-weight: 600; color: var(--black); line-height: 1.2; }
+  .wf .box .k { font-size: max(8px, 0.8cqw); color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+  .wf .hdr { background: var(--brand); border: none; display: flex; align-items: center; justify-content: space-between; gap: 1cqw; padding: 0 1.3cqw; }
+  .wf .hdr .t { color: #fff; font-size: max(11px, 1.6cqw); white-space: nowrap; }
+  .wf .hdr .navs { display: flex; gap: 0.4cqw; flex-wrap: nowrap; }
+  .wf .hdr .navs span { font-size: max(7px, 0.8cqw); padding: 0.25cqw 0.55cqw; border: 1px solid rgba(255,255,255,.55); color: #fff; white-space: nowrap; }
+  .wf .hdr .navs span.on { background: #fff; color: var(--brand); border-color: #fff; }
+  .wf .slc { background: var(--panel); border: 1px solid var(--line); }
+  .wf .card { background: #fff; border: 1px solid var(--line); }
+  .wf .foot { background: none; border: none; border-top: 1px solid var(--line); padding: 0.3cqw 0.2cqw; }
+  .wf .foot .t { font-weight: 400; font-size: 0.8cqw; color: var(--muted); }
+  .wf .slc .k, .wf .card .k { display: none; }
+  .wf .slc .t, .wf .card .t { font-size: 1.0cqw; }
+  .wf .slc .t::before { content: "▾ "; color: var(--muted); }
+  .caption { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+
+  /* Look and feel */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .sw { border: 1px solid var(--line); }
+  .sw .c { height: 56px; }
+  .sw .l { padding: 6px 8px; font-size: 12px; }
+  .sw .l b { display: block; color: var(--black); font-weight: 600; }
+  .hatch { background: repeating-linear-gradient(45deg, #D9D9D9 0 6px, #ffffff 6px 10px); outline: 1px solid #BFBFBF; outline-offset: -1px; }
+  .sample { border: 1px solid var(--line); max-width: 900px; }
+  .sample .band { background: var(--brand); color: #fff; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .sample .band .pt { font-size: 20px; font-weight: 600; }
+  .sample .navs { display: flex; gap: 4px; flex-wrap: wrap; }
+  .sample .navs span { font-size: 11px; padding: 2px 8px; border: 1px solid rgba(255,255,255,.55); }
+  .sample .navs span.on { background: #fff; color: var(--brand); border-color: #fff; }
+  .sample .vis { padding: 16px 20px; }
+  .sample .vt { font-size: 16px; font-weight: 600; color: var(--black); }
+  .sample .vs { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; margin-top: 8px; }
+  .legend span::before { content: attr(data-m); margin-right: 4px; }
+  .fn { font-size: 11px; color: var(--muted); border-top: 1px solid var(--line); margin-top: 10px; padding-top: 6px; }
+  ul.q li, ol.q li { margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>NSS Student Experience dashboard: checkpoint 1 (revision 4)</h1>
+  <p class="lede">Page plan, wireframes (1280 × 720) and look and feel, for review before the report is built. Placeholder layout only; no real figures.</p>
+  <div class="changes"><b>Changed in this revision</b>
+    <ul>
+      <li>Overview and Themes merged into one page (Q1 and Q3 share the question-by-theme grain); 6 pages instead of 7.</li>
+      <li>Removed charts that repeated another page: top subjects and questions-below-by-mode (Overview), theme summary (Themes), selected question across providers (Sector), students below benchmark by subject (Priorities), positivity by theme (Subject detail).</li>
+      <li>Sample visual: difference shown as bars, with the 95% confidence interval drawn over each bar.</li>
+      <li>Data grain and measure changes are on hold until the data is remodelled (provider, mode and CAH hierarchy).</li>
+    </ul>
+  </div>
+  <nav class="toc" style="margin-top:12px">
+    <a href="#plan">Page plan</a><a href="#wireframes">Wireframes</a><a href="#look">Look and feel</a><a href="#measures">Measures to revisit</a><a href="#questions">Decisions</a>
+  </nav>
+
+  <h2 id="plan">Page plan</h2>
+  <p>Every page carries the same header (title left, page navigation right), synced slicers and a footnote line. Slicer defaults will follow the remodelled data grain. Visuals marked <b>sector</b> compare one provider against all others.</p>
+  <div class="scroll">
+  <table class="plan">
+    <tr><th>Question</th><th>Page</th><th>Visuals</th><th>Grain</th><th>Measures</th></tr>
+    <tr><td>Q1 Overall position<br>Q3 Themes, questions and response strength</td><td>1 Overview</td><td>5 cards (overall positivity, questions above / in line with / below benchmark, response rate); difference bars with 95% CI by question, grouped by theme; response strength by question (option 1 / option 2 / negative, Q01–Q27); theme summary table; lukewarm-risk scatter. Clicking a theme filters the page</td><td>Question, grouped by theme</td><td>Response rate %; Positivity % (derived); category counts; Positivity %; Difference (pts) and CI bounds; Option 1 / Option 2 / Negative share %</td></tr>
+    <tr><td>Q2 Subjects</td><td>2 Subjects</td><td>4 cards (subjects published, subjects with a question below, systemic, specific); subject × theme heatmap (drill CAH2 → CAH3); subjects by questions below (systemic / specific); sector-pattern scatter; selected subject's difference bars with CI</td><td>Subject × question, one CAH level</td><td>Questions below benchmark; Themes with a question below (new); Difference; Positivity vs sector median (new); Provider percentile</td></tr>
+    <tr><td>Q4 Student segments</td><td>3 Segments</td><td>Question × mode matrix; question × level matrix; questions below by mode and by level; subject × mode matrix</td><td>Mode or level × subject × question</td><td>Difference; Benchmark category (marker + colour); category counts; Responses</td></tr>
+    <tr><td>Q5 Sector comparison</td><td>4 Sector</td><td>4 cards (providers compared, median percentile, questions in top quartile, in bottom quartile); question table; benchmark-vs-sector scatter; percentile bars with quartile lines</td><td>Question × subject × mode × level, across providers (<b>sector</b>)</td><td>Provider rank / percentile; Sector median positivity %; Providers compared; quartile counts (new). Q27 and Q28 excluded</td></tr>
+    <tr><td>Q6 Reliability and coverage</td><td>5 Reliability</td><td>5 cards (subjects published CAH1/2/3, questions published, results flagged); response rate subject × mode matrix; response rate by mode and level; results by response-count band; low-reliability results table</td><td>Subject × segment</td><td>Coverage measures; Response rate %; Response headcount; Low responses and Self-benchmarked flags</td></tr>
+    <tr><td>Q7 Priorities and good practice</td><td>6 Priorities</td><td>4 cards (students below benchmark, gaps below benchmark, good-practice pairs, largest gap); ranked gaps table; students below benchmark by theme; good-practice table</td><td>Question × subject, one CAH level</td><td>Students below benchmark (est.); Difference; Population; Benchmark category; Provider overall category (new)</td></tr>
+    <tr><td>Drill-through</td><td>Subject detail</td><td>4 cards; theme × mode matrix with derived positivity and difference (expand theme → questions); questions above / in line / below by theme; sector percentile by question</td><td>Theme (→ question) × mode, one subject</td><td>Positivity % (derived); category counts; Difference; Provider percentile</td></tr>
+    <tr><td>Drill-through</td><td>Question detail</td><td>4 cards (positivity, benchmark, difference, sector median); question across subjects; across providers (provider highlighted); option shares by mode; difference by level</td><td>Subject; provider (<b>sector</b>); mode; level</td><td>Positivity %; Benchmark %; Difference; Sector median positivity %; option shares</td></tr>
+  </table>
+  </div>
+
+  <h2 id="wireframes">Wireframes</h2>
+  <p class="caption">Dashed boxes are visuals (type · title); white boxes are KPI cards. Blue band = header with page navigation; grey boxes = synced slicers; grey line at the bottom = footnote. Coordinates are at 1280 × 720.</p>
+  <div id="pages"></div>
+
+  <h2 id="look">Look and feel</h2>
+  <h3>Brand</h3>
+  <div class="swatches" id="brand"></div>
+  <h3>Benchmark comparison (colour-blind safe, always paired with a marker)</h3>
+  <div class="swatches" id="sig"></div>
+  <h3>Diverging background (Difference matrices) and category ramp (modes, levels)</h3>
+  <div class="swatches" id="ramp"></div>
+
+  <h3>Sample header and visual</h3>
+  <div class="sample">
+    <div class="band">
+      <div class="pt">Overview</div>
+      <div class="navs"><span class="on">Overview</span><span>Subjects</span><span>Segments</span><span>Sector</span><span>Reliability</span><span>Priorities</span></div>
+    </div>
+    <div class="vis">
+      <div class="vt">Difference from benchmark by question</div>
+      <div class="vs">Percentage points · illustrative placeholder data</div>
+      <svg id="sampleChart" viewBox="0 0 860 330" width="100%" role="img" aria-label="Illustrative bar chart of difference from benchmark by question, with 95% confidence intervals drawn over each bar"></svg>
+      <div class="legend">
+        <span data-m="▲" style="color:var(--above)">Above benchmark</span>
+        <span data-m="●" style="color:#7a7a7a">In line with benchmark</span>
+        <span data-m="▼" style="color:var(--below)">Below benchmark</span>
+        <span data-m="○" style="color:#8C8C8C">Not assessed</span>
+      </div>
+      <div class="fn">Black lines show the 95% confidence interval of the difference. Above / below benchmark: difference of more than 2.5 pts with at least 90% confidence (OfS). Faded = fewer than 30 responses or self-benchmarked.</div>
+    </div>
+  </div>
+
+  <h2 id="measures">Measures to revisit after the data remodel</h2>
+  <p>On hold until the new data grain arrives; listed so nothing is lost.</p>
+  <ul class="q">
+    <li><b>Guards and pooling</b> for the new grain (provider, mode, CAH hierarchy), and a derived response rate for the Overview card.</li>
+    <li><b>Rename labels</b> without "materially": Questions above / in line with / below benchmark / not assessed.</li>
+    <li><b>New:</b> Themes with a question below benchmark; Positivity vs sector median (pts); Provider overall category; Questions in top / bottom sector quartile; Response-count band for the reliability histogram.</li>
+  </ul>
+
+  <h2 id="questions">Decisions</h2>
+  <ul class="q">
+    <li><b>Checkpoint 2 page:</b> Overview first.</li>
+    <li><b>Overview cards, in order:</b> overall positivity, questions above, in line with and below benchmark, response rate. No Q28 or "not assessed" card.</li>
+    <li><b>Q28:</b> kept out of the 4-option response-strength chart; it still appears in the difference chart.</li>
+    <li><b>Segments:</b> the level matrix shows levels side by side and ignores the Level slicer.</li>
+    <li><b>Reliability threshold:</b> default 30.</li>
+    <li><b>Data grain:</b> on hold until the remodelled data arrives.</li>
+  </ul>
+</main>
+
+<script>
+const PAGES = ["Overview","Subjects","Segments","Sector","Reliability","Priorities"];
+const STD_SLICERS = [
+  [16,76,230,48,"slc","Slicer","Provider"],
+  [256,76,190,48,"slc","Slicer","Mode"],
+  [456,76,230,48,"slc","Slicer (single)","Level"],
+  [696,76,190,48,"slc","Slicer (single)","Subject level"]
+];
+const FOOT_BENCH = "Black lines show the 95% confidence interval. Above / below benchmark = difference of more than 2.5 pts with at least 90% confidence (adjustable). Theme and overall positivity are derived from option counts. Faded = low reliability.";
+function frame(title, navOn, extra, foot) {
+  const b = [[0,0,1280,64,"hdr",title,navOn]];
+  b.push(...STD_SLICERS, ...(extra || []));
+  b.push([16,694,1248,24,"foot","",foot || FOOT_BENCH]);
+  return b;
+}
+// Card row helper: n equal cards across the content width at y=136, h=72
+function cards(labels) {
+  const gap = 12, w = (1248 - gap * (labels.length - 1)) / labels.length;
+  return labels.map((l, i) => [16 + i * (w + gap), 136, w, 72, "card", "Card", l]);
+}
+const WF = [
+  { name: "1 Overview and themes (Q1, Q3)", boxes: frame("Overview", 0, [
+    [896,76,368,48,"slc","Slider","Confidence threshold (default 90)"],
+    ...cards(["Overall positivity (derived)","▲ Questions above benchmark","● Questions in line with benchmark","▼ Questions below benchmark","Response rate"]),
+    [16,220,410,462,"box","Bar chart + CI","Difference from benchmark by question, grouped by theme"],
+    [438,220,410,462,"box","100% stacked bar","Response strength by question: option 1, option 2, negative (Q01–Q27)"],
+    [860,220,404,225,"box","Table","Theme summary: positivity (derived), questions above / in line / below / not assessed"],
+    [860,457,404,225,"box","Scatter","Lukewarm risk: positivity vs option 1 share, by question"]
+  ], "Black lines show the 95% confidence interval. Above / below benchmark = difference of more than 2.5 pts with at least 90% confidence (adjustable). Theme and overall positivity are derived from option counts. Click a theme to filter the page. Faded = low reliability.")},
+  { name: "2 Subjects (Q2)", boxes: frame("Subjects", 1, [
+    [896,76,368,48,"slc","Slicer","Theme (multi-select)"],
+    ...cards(["Subjects published","Subjects with a question below benchmark","Systemic gaps (3+ themes)","Specific gaps (1 theme)"]),
+    [16,220,620,462,"box","Matrix heatmap","Questions below benchmark by subject × theme (rows drill CAH2 → CAH3)"],
+    [648,220,300,225,"box","Bar chart","Subjects by questions below benchmark, systemic vs specific"],
+    [960,220,304,225,"box","Scatter","Sector pattern or underperformance? x = Difference, y = vs sector median"],
+    [648,457,616,225,"box","Bar chart + CI","Selected subject: difference from benchmark by question"]
+  ], "Above / below benchmark = difference of more than 2.5 pts with at least 90% confidence. Systemic = below benchmark on questions in 3+ themes. Right-click a subject for Subject detail. Faded = low reliability.")},
+  { name: "3 Segments (Q4)", boxes: frame("Segments", 2, [
+    [16,136,410,546,"box","Matrix","Difference by question × mode (blank = not published)"],
+    [438,136,410,546,"box","Matrix","Difference by question × level of study"],
+    [860,136,404,170,"box","Clustered bar","Questions above / below benchmark by mode and by level"],
+    [860,318,404,364,"box","Matrix","Questions below benchmark by subject × mode"]
+  ], "Each segment is compared with its own benchmark. Above / below benchmark = difference of more than 2.5 pts with at least 90% confidence. Blank = not published.")},
+  { name: "4 Sector (Q5)", boxes: frame("Sector", 3, [
+    [896,76,368,48,"slc","Slicer","Subject (single)"],
+    ...cards(["Providers compared (median)","Median percentile across questions","Questions in top quartile","Questions in bottom quartile"]),
+    [16,220,620,462,"box","Table","By question: positivity, sector median, rank, percentile, providers compared, benchmark comparison"],
+    [648,220,616,225,"box","Scatter","Benchmark view vs sector view: x = Difference, y = Percentile"],
+    [648,457,616,225,"box","Bar chart","Percentile by question, 25% / 75% quartile lines"]
+  ], "Compared with all providers that have a published result for the same mode, level, subject and question. Q27 and Q28 are excluded (asked only in some UK nations).")},
+  { name: "5 Reliability and coverage (Q6)", boxes: frame("Reliability and coverage", 4, [
+    [896,76,368,48,"slc","Slider","Reliability threshold (default 30)"],
+    ...cards(["Subjects published (CAH1)","Subjects published (CAH2)","Subjects published (CAH3)","Questions published","Results flagged low-reliability"]),
+    [16,220,480,462,"box","Matrix","Response rate and response headcount by subject × mode"],
+    [508,220,376,225,"box","Clustered bar","Response rate by mode and level"],
+    [896,220,368,225,"box","Column chart","Results by number of responses (bands), threshold marked"],
+    [508,457,756,225,"box","Table","Low-reliability results: subject, question, responses, self-benchmarked, benchmark comparison"]
+  ], "Low reliability = fewer than 30 responses (adjustable) or the provider is more than half of its own benchmark population. Only published combinations are shown.")},
+  { name: "6 Priorities (Q7)", boxes: frame("Priorities and good practice", 5, [
+    ...cards(["Students below benchmark (est.)","Gaps below benchmark","Good-practice subjects","Largest single gap"]),
+    [16,220,620,462,"box","Table","Largest gaps below benchmark: subject × question ranked by students below benchmark (est.)"],
+    [648,220,616,225,"box","Bar chart","Students below benchmark by theme (est.)"],
+    [648,457,616,225,"box","Table","Good practice: subjects above benchmark on questions where the provider overall is below"]
+  ], "Students below benchmark (est.) = population × gap to benchmark; one student can count on several questions. Above / below benchmark = more than 2.5 pts with at least 90% confidence.")},
+  { name: "Drill-through: Subject detail", boxes: frame("Subject detail", -1, [
+    ...cards(["Response headcount","Response rate","▲ Questions above benchmark","▼ Questions below benchmark"]),
+    [16,220,620,462,"box","Matrix","Theme × mode: positivity (derived) and difference (expand theme → questions)"],
+    [648,220,616,225,"box","Stacked bar","Questions above / in line / below benchmark by theme"],
+    [648,457,616,225,"box","Bar chart","Subject's sector percentile by question, quartile lines"]
+  ])},
+  { name: "Drill-through: Question detail", boxes: frame("Question detail", -1, [
+    ...cards(["Positivity","Benchmark","Difference","Sector median"]),
+    [16,220,480,462,"box","Bar chart + CI","This question across subjects: difference from benchmark"],
+    [508,220,756,225,"box","Column chart","This question across providers: positivity, provider highlighted, sector median line (sector)"],
+    [508,457,376,225,"box","100% stacked bar","Response strength by mode"],
+    [896,457,368,225,"box","Bar chart + CI","Difference from benchmark by level"]
+  ])}
+];
+
+const root = document.getElementById("pages");
+for (const p of WF) {
+  const h = document.createElement("h3"); h.textContent = p.name; root.appendChild(h);
+  const wf = document.createElement("div"); wf.className = "wf"; wf.setAttribute("role","img"); wf.setAttribute("aria-label", "Wireframe: " + p.name);
+  for (const [x,y,w,hgt,kind,a,b] of p.boxes) {
+    const el = document.createElement("div");
+    el.className = "box " + (kind === "box" ? "" : kind);
+    Object.assign(el.style, { left: x/12.8 + "%", top: y/7.2 + "%", width: w/12.8 + "%", height: hgt/7.2 + "%" });
+    if (kind === "hdr") {
+      const nav = b === -1 ? `<span>← Back</span>` : PAGES.map((n,i) => `<span class="${i===b?'on':''}">${n}</span>`).join("");
+      el.innerHTML = `<div class="t">${a}</div><div class="navs">${nav}</div>`;
+    } else if (kind === "foot") {
+      el.innerHTML = `<div class="t">${b}</div>`;
+    } else {
+      el.innerHTML = `<div class="k">${a}</div><div class="t">${b}</div>`;
+    }
+    wf.appendChild(el);
+  }
+  root.appendChild(wf);
+}
+
+function swatches(id, list) {
+  document.getElementById(id).innerHTML = list.map(([name,hex,use,cls]) =>
+    `<div class="sw"><div class="c ${cls||''}" style="${cls?'':'background:'+hex}"></div><div class="l"><b>${name}</b>${hex}<br><span style="color:var(--muted)">${use}</span></div></div>`).join("");
+}
+swatches("brand", [
+  ["Monash Blue","#006DAE","Header, active nav, selection"],
+  ["Black","#000000","Titles, CI lines"],
+  ["Dark grey","#3C3C3C","Body text"],
+  ["Mid grey","#8C8C8C","Secondary text, footnotes"],
+  ["Light grey","#F2F2F2","Panels"],
+  ["White","#FFFFFF","Background"]
+]);
+swatches("sig", [
+  ["▲ Above benchmark","#1F4E79","Deep blue"],
+  ["▼ Below benchmark","#C45A12","Burnt orange"],
+  ["● In line with benchmark","#A6A6A6","Mid grey"],
+  ["○ Not assessed","#D9D9D9","Light grey, hatched","hatch"],
+  ["Low reliability","#1F4E79 @ 35%","Same colour, faded", ""]
+]);
+document.querySelectorAll("#sig .sw .c")[4].style.background = "rgba(31,78,121,0.35)";
+swatches("ramp", [
+  ["Below (diverging)","#F4CBA8","Light orange"],
+  ["Midpoint","#F7F7F7","Near-white"],
+  ["Above (diverging)","#BDD7EE","Light blue"],
+  ["Category 1","#1F4E79","e.g. Full-time"],
+  ["Category 2","#5B8DB8","e.g. Part-time"],
+  ["Category 3","#A9C6E0","e.g. Apprenticeship"]
+]);
+
+// Sample: horizontal bars of difference, 95% CI drawn over each bar, marker at the bar end
+(function () {
+  const svg = document.getElementById("sampleChart");
+  const qs = [["Q01",-0.3,-2.1,1.5,"i",0],["Q02",-2.7,-4.6,-0.8,"i",0],["Q03",0.7,-1.2,2.6,"i",0],["Q04",-2.5,-4.3,-0.7,"i",0],
+              ["Q08",-6.2,-8.3,-4.1,"b",0],["Q09",-3.8,-5.7,-1.9,"b",0],["Q14",-7.6,-9.8,-5.4,"b",0],["Q20",0.8,-0.9,2.5,"i",1],
+              ["Q22",1.1,-0.8,3.0,"i",0],["Q25",5.1,3.0,7.2,"a",0],["Q26",-2.2,-4.2,-0.2,"i",0],["Q27",-2.8,-4.6,-1.0,"n",0]];
+  const W = 860, H = 330, L = 50, R = 20, T = 16, B = 40;
+  const x = v => L + (v + 12) / 24 * (W - L - R);
+  const step = (H - T - B) / qs.length, bh = step * 0.62;
+  const col = { a: "#1F4E79", b: "#C45A12", i: "#A6A6A6", n: "#D9D9D9" };
+  const mk = { a: "▲", b: "▼", i: "●", n: "○" };
+  let s = "";
+  for (let v = -12; v <= 12; v += 4) s += `<line x1="${x(v)}" x2="${x(v)}" y1="${T}" y2="${H-B}" stroke="#EDEDED"/><text x="${x(v)}" y="${H-B+16}" font-size="11" fill="#8C8C8C" text-anchor="middle">${v>0?'+':''}${v}</text>`;
+  qs.forEach(([q,d,lo,hi,c,faded],i) => {
+    const yc = T + step * (i + .5), op = faded ? .35 : 1;
+    const x0 = Math.min(x(0), x(d)), bw = Math.abs(x(d) - x(0));
+    s += `<text x="${L-8}" y="${yc+4}" font-size="11" fill="#3C3C3C" text-anchor="end">${q}</text>`;
+    s += `<rect x="${x0}" y="${yc-bh/2}" width="${Math.max(bw,1)}" height="${bh}" fill="${col[c]}" opacity="${op}" ${c==='n'?'stroke="#BFBFBF"':''}/>`;
+    s += `<line x1="${x(lo)}" x2="${x(hi)}" y1="${yc}" y2="${yc}" stroke="#000" stroke-width="1.2" opacity="${faded?.5:1}"/>`;
+    s += `<line x1="${x(lo)}" x2="${x(lo)}" y1="${yc-5}" y2="${yc+5}" stroke="#000" stroke-width="1.2" opacity="${faded?.5:1}"/>`;
+    s += `<line x1="${x(hi)}" x2="${x(hi)}" y1="${yc-5}" y2="${yc+5}" stroke="#000" stroke-width="1.2" opacity="${faded?.5:1}"/>`;
+    const lx = d < 0 ? x(Math.min(d, lo)) - 12 : x(Math.max(d, hi)) + 12;
+    s += `<text x="${lx}" y="${yc+4}" font-size="11" fill="${c==='n'?'#8C8C8C':col[c]}" text-anchor="middle" opacity="${op}">${mk[c]}</text>`;
+  });
+  s += `<line x1="${x(0)}" x2="${x(0)}" y1="${T}" y2="${H-B}" stroke="#3C3C3C" stroke-width="1"/>`;
+  s += `<text x="${(L+W-R)/2}" y="${H-6}" font-size="11" fill="#8C8C8C" text-anchor="middle">Difference from benchmark (pts)</text>`;
+  svg.innerHTML = s;
+})();
+</script>
+</body>
+</html>

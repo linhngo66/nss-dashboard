@@ -63,14 +63,15 @@ What the cleaning has already done, so you do not need to:
 - Kept the Taught population only; the Registered/Taught overlap is gone.
 - Removed rows without a published benchmark, including all suppressed rows and the published **Theme** rows. There is no suppression column and no theme-level fact.
 - Split question numbers into `question_no` and mapped them to themes.
-- Keyed "All subjects" as `cah_code = "ALL"` and built the CAH1 → CAH2 → CAH3 hierarchy in `dim_cah`. The prefix nesting of CAH codes has been verified.
+- Removed the published totals. `fact_teach` holds only CAH3 subjects and the three specific levels of study (`First degree`, `Other undergraduate`, `Undergraduate with postgraduate component`). There are no `All subjects`, CAH1, CAH2 or `All undergraduates` rows.
+- Built the CAH1 → CAH2 → CAH3 hierarchy in `dim_cah`. It still lists every level, so CAH3 rows can roll up. The prefix nesting of CAH codes has been verified. The CAH1/CAH2 parent codes and names are also denormalised onto `fact_teach` for convenience, but slicers and visuals should use `dim_cah`.
 - Kept only the 95% confidence intervals and added `benchmark_category` from the OfS `materially_*` columns.
 
 ## 4. Data rules (must follow)
 
 1. **One provider at a time.** Every provider view is filtered to a single provider through a single-select slicer on `dim_provider[provider_name]`, with a default provider of [SET BY TEAM]. Sector views (rankings, sector medians) remove that filter explicitly in DAX; they never sum across providers.
-2. **One subject level and one study level at a time.** The fact holds published totals alongside their breakdowns (`All subjects` ⊃ CAH1 ⊃ CAH2 ⊃ CAH3; `All undergraduates` ⊃ the three levels). Make the `dim_cah[subject_level]` and `dim_level[level_of_study]` slicers single-select (defaults `All subjects` and `All undergraduates`), and guard additive measures with `HASONEVALUE()` on both.
-3. **Always use the published total row.** Breakdown rows do not sum to their totals, because small groups are not published. Never roll children up to recreate a parent.
+2. **Only CAH3 × level results are published.** Each fact row is one provider × mode × level × CAH3 subject × question, and the rows do not overlap. Counts can therefore be summed across subjects and levels without double-counting. Every figure above that grain is derived: provider-wide, CAH1, CAH2 and all-levels views.
+3. **Roll-ups understate the true totals.** Small groups are not published, so summed CAH3 or level rows cover only part of a provider's students. The gap is larger for part-time and apprenticeship. Label every roll-up "derived from published subject breakdowns". Never present one as an OfS published figure.
 4. **Compare within a mode.** Benchmarks are calculated within each mode of study. Response counts may be summed across modes; percentages may not be combined across them.
 5. **No averaging of percentages.** Never sum or average `positivity_measure`, `benchmark`, `difference`, the CIs or `materially_*`. When one visual cell is exactly one fact row, show the published value. When a visual needs a combined figure:
    - For positivity, pool the option counts (rule 6) and label the result **"derived, not published"**.
@@ -86,7 +87,7 @@ What the cleaning has already done, so you do not need to:
    - **Materially above** if `materially_above_bench` ≥ [Confidence threshold].
    - **Materially below** if `materially_below_bench` ≥ [Confidence threshold].
    - **Broadly in line** otherwise.
-   - **Not assessed** where `materially_*` is blank (1,111 rows).
+   - **Not assessed** where `materially_*` is blank (report the row count after load).
 
    Implement [Confidence threshold] as a what-if parameter with default 90, matching the stored `benchmark_category`. State on the report that "materially" means more than 2.5 pp from benchmark with at least that much statistical confidence.
 9. **Reliability flags.** Low-reliability results are shown faded, not hidden.
@@ -103,9 +104,9 @@ Import the tables in section 3 as they are. Do not change the source files. Put 
 **Model additions**
 - `dim_theme_question`: a short question label (≤ 40 characters), a question sort order, and a theme label with blank themes replaced by "Other questions" (sorted last).
 - A separate `dim_theme` table (theme number, name, sort order) is optional. If you add it, relate it to `dim_theme_question` and explain why.
-- `dim_mode`, `dim_level`: sort-order columns. Suggested orders are Full-time, Part-time, Apprenticeship; and All undergraduates, First degree, Other undergraduate, Undergraduate with postgraduate component.
+- `dim_mode`, `dim_level`: sort-order columns. Suggested orders are Full-time, Part-time, Apprenticeship; and First degree, Other undergraduate, Undergraduate with postgraduate component.
 - `dim_cah`: the hierarchy `cah1_name` → `cah2_name` → `cah_name`.
-- Hide the denormalised fact columns (`provider_name`, `subject_level`, `cah_name`, `theme_no`) and all foreign keys.
+- Hide the denormalised fact columns (`provider_name`, `subject_level`, `cah1_code`, `cah1_name`, `cah2_code`, `cah2_name`, `cah_name`, `theme_no`) and all foreign keys.
 - The data has no year column. Write measures so that a year dimension can be added later without rewriting them.
 
 **Relationships**: as in the data dictionary. They are one-to-many and single-direction, from each dimension to `fact_teach`.
@@ -129,9 +130,9 @@ Import the tables in section 3 as they are. Do not change the source files. Put 
   - Sector median positivity for the same combination.
   - Number of providers compared.
 - **[Priority]**
-  - Students below benchmark (est.) = `number_population × −MIN(difference, 0) ÷ 100`, at **question** grain, summed only across rows of one subject level. Its description should say it estimates how many more students would need to respond positively to reach benchmark.
+  - Students below benchmark (est.) = `number_population × −MIN(difference, 0) ÷ 100`, computed at **question** grain. It can be summed across subjects and levels, because the rows do not overlap. Its description should say it estimates how many more students would need to respond positively to reach benchmark.
 - **[Coverage]**
-  - Subjects published at each CAH level for the provider.
+  - CAH3 subjects published for the provider, and the CAH1/CAH2 groups they cover.
   - Questions published.
   - Rows flagged low-reliability.
 
@@ -142,17 +143,17 @@ Add a description to every measure. Format percentages to 1 decimal place and di
 For each question, the page plan must say which page answers it, at what grain, with which measures and visuals. The notes below are the minimum; propose better visuals where they exist.
 
 ### Q1. Overall position: where does the provider stand against its benchmarks?
-- **Asks:** At `All subjects` × `All undergraduates` for the selected mode, on which questions is the provider materially above or below benchmark? Are the gaps concentrated in particular themes?
-- **Grain:** question, grouped by theme.
-- **Measures:** Benchmark category counts, Difference with 95% CI, Positivity % (derived) per theme.
-- **Watch for:** Label theme values as derived. Show "Not assessed" separately from "Broadly in line".
+- **Asks:** Across all of the provider's published CAH3 × level results for the selected mode, how many are materially above or below benchmark on each question? Are the gaps concentrated in particular themes?
+- **Grain:** question, grouped by theme, aggregated over the provider's CAH3 × level rows.
+- **Measures:** Benchmark category counts, Positivity % (derived) per question and theme.
+- **Watch for:** There is no published provider-wide benchmark or difference, so do not show a single overall Difference or CI. Label all overall values as derived. Show "Not assessed" separately from "Broadly in line".
 
 ### Q2. Subjects: which subjects are furthest below benchmark, and why?
 - **Asks:**
-  - Which CAH2 subjects (drilling to CAH3) are materially below benchmark, and on which themes?
+  - Which CAH3 subjects are materially below benchmark, and on which themes? Group them under CAH1/CAH2 through the `dim_cah` hierarchy. At CAH1/CAH2, show counts of category results and derived positivity, never a published difference.
   - Is a subject's gap **systemic** (materially below on questions across several themes) or **specific** (concentrated in one theme)?
   - Is low positivity a **sector-wide pattern** for that subject (the sector median is also low) or **underperformance** (positivity is below both the benchmark and the sector median)?
-- **Grain:** subject × question, one CAH level at a time.
+- **Grain:** CAH3 subject × question (× level), with CAH1/CAH2 roll-ups derived.
 - **Measures:** Difference, Benchmark category counts per subject × theme, Sector median positivity, Provider percentile.
 - **Watch for:** Small CAH3 groups. Fade low-reliability and self-benchmarked results.
 
@@ -178,7 +179,7 @@ For each question, the page plan must say which page answers it, at what grain, 
   - For a given question and subject, where does the provider rank among all providers with a published result?
   - Which questions put it in the top or bottom quartile of the sector?
   - Does the ranking tell a different story from the benchmark comparison? A provider can be above benchmark but mid-table if its benchmark is low.
-- **Grain:** question × subject × mode × level, compared across providers.
+- **Grain:** question × CAH3 subject × mode × level, compared across providers. Rankings exist only at this published grain.
 - **Measures:** Provider percentile, Sector median positivity, Number of providers compared.
 - **Watch for:** Exclude the applicability-limited questions (rule 10). Show the number of providers compared, because small subjects have few peers.
 
@@ -194,8 +195,8 @@ For each question, the page plan must say which page answers it, at what grain, 
 ### Q7. Priorities and good practice: where should the team act first?
 - **Asks:**
   - Which subject × question gaps that are materially below benchmark affect the most students?
-  - Where does good practice already exist internally, meaning subjects materially above benchmark on questions where the provider overall is below?
-- **Grain:** question × subject, one CAH level at a time.
+  - Where does good practice already exist internally, meaning subjects materially above benchmark on questions where most of the provider's other subjects are materially below?
+- **Grain:** question × CAH3 subject (× level).
 - **Measures:** Students below benchmark (est.), Difference, Population, Benchmark category.
 - **Watch for:**
   - Rank only materially-below results.
@@ -209,9 +210,9 @@ For each question, the page plan must say which page answers it, at what grain, 
 - **Brand colours.** Monash Blue `#006DAE` is the single brand accent, used for the header bar, active navigation and selected states. Everything else is black `#000000`, dark grey `#3C3C3C` for body text, mid grey `#8C8C8C` for secondary text, light grey `#F2F2F2` for panels, and white backgrounds. Verify these values against the current Monash brand guidelines and tell me if they differ.
 - **Typography.** Segoe UI throughout (Semibold for titles, Regular for body), because Monash's brand typefaces are not available as Power BI fonts. The hierarchy is 20 pt page title, 12 pt visual title, 10 pt body and labels.
 - **Layout.** Page size 1280 × 720 with generous white space. Each page has:
-  - A flat blue header band with the page title and a filter-context subtitle (provider, mode, level, subject level).
+  - A flat blue header band with the page title and a filter-context subtitle (provider, mode, level, subject).
   - Navigation buttons.
-  - Synced slicers for Provider, Mode of study, Level of study and Subject level.
+  - Synced slicers for Provider, Mode of study, Level of study and Subject (the `dim_cah` CAH1 → CAH2 → CAH3 hierarchy).
 
   Use thin grey dividers instead of borders or shadows. No gradients, 3D effects or decorative images.
 - **Theme file.** Apply the theme through a report theme JSON file, not per visual.
@@ -248,7 +249,7 @@ Provide at least two drill-through pages, each with a back button:
 ## 9. Acceptance checks before you finish
 
 1. For 20 random fact rows, the visual values equal the source `positivity_measure`, `benchmark`, `difference` and `benchmark_category`.
-2. No visual combines rows from different subject levels, study levels or providers, except sector measures that do so explicitly and are labelled.
+2. No visual shows a published percentage (positivity, benchmark, difference, CI) for more than one fact row. Roll-ups across subjects, levels or providers use counts or derived positivity and are labelled.
 3. Every derived figure (theme positivity, pooled positivity) is labelled as derived.
 4. The recomputed positivity match rate is reported for the 4-option questions and `Q28`, with examples of mismatches.
 5. No `HC` question appears in the model or anywhere in the report.

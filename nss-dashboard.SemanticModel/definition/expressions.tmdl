@@ -1,0 +1,6 @@
+/// Folder containing the cleaned star-schema files produced by scripts/clean.R (trailing backslash required).
+expression DataFolder = "C:\Users\ADMIN\Documents\studies-ba\nss-student-survey\data\clean\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 6ff0a592-9e44-4466-89eb-f5a476a4faf0
+
+	annotation PBI_ResultType = Text
+

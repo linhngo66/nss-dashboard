@@ -1,0 +1,26 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode","MCP-PBIModeling"]
+
+annotation PBI_QueryOrder = ["DataFolder","dim_provider","dim_mode","dim_level","dim_cah","dim_theme_question","fact_teach"]
+
+ref table dim_provider
+ref table dim_mode
+ref table dim_level
+ref table dim_cah
+ref table dim_theme_question
+ref table fact_teach
+ref table 'Confidence threshold'
+ref table 'Reliability threshold'
+
+ref cultureInfo en-US
+

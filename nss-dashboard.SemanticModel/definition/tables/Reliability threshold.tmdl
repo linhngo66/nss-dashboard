@@ -1,0 +1,26 @@
+/// What-if parameter: results with fewer responses than this are flagged low-reliability and shown faded. Placeholder default 30, to be set by the team.
+table 'Reliability threshold'
+	lineageTag: ff411b57-212b-44ce-9a6f-a3492715feb2
+
+	/// Selected minimum number of responses for a reliable result; 30 (placeholder, set by team) when nothing or several values are selected.
+	measure 'Reliability threshold Value' = SELECTEDVALUE ( 'Reliability threshold'[Reliability threshold], 30 )
+		formatString: 0
+		lineageTag: 13a2c2e6-993b-4c98-ae76-1c41d6b09427
+
+	/// Selectable minimum number of responses, 0-200 in steps of 5.
+	column 'Reliability threshold'
+		dataType: int64
+		formatString: 0
+		lineageTag: 2319c45e-6e0d-4945-951d-c2fbd2213979
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+	partition 'Reliability threshold' = calculated
+		mode: import
+		source = GENERATESERIES ( 0, 200, 5 )
+

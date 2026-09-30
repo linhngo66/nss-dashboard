@@ -1,0 +1,29 @@
+/// Higher education providers present in fact_teach. One row per UKPRN.
+table dim_provider
+	lineageTag: da425142-907f-4b46-88bd-49db0bb9c354
+
+	/// UK Provider Reference Number. Primary key.
+	column ukprn
+		dataType: string
+		isKey
+		lineageTag: c9c4f20e-a8fb-4b13-8c91-26ba22a7cd67
+		summarizeBy: none
+		sourceColumn: ukprn
+
+	/// Provider name.
+	column provider_name
+		dataType: string
+		lineageTag: 495325cb-3663-403e-99ef-3ccb671eaed0
+		summarizeBy: none
+		sourceColumn: provider_name
+
+	partition dim_provider = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_provider.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"ukprn", type text}, {"provider_name", type text}})
+				in
+				    Typed
+

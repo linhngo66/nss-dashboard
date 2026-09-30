@@ -1,0 +1,32 @@
+/// Mode of study: Full-time, Part-time, Apprenticeship. Separate populations; benchmarks are calculated within each mode.
+table dim_mode
+	lineageTag: 6bcbf067-d04d-4d1e-a8f8-ffff3759846a
+
+	/// Mode of study. Primary key.
+	column mode_of_study
+		dataType: string
+		isKey
+		lineageTag: 4927cf97-6b92-4f02-aa70-e0a9896bfca8
+		summarizeBy: none
+		sourceColumn: mode_of_study
+		sortByColumn: mode_sort
+
+	/// Sort order for mode_of_study: Full-time, Part-time, Apprenticeship (added in Power Query).
+	column mode_sort
+		dataType: int64
+		isHidden
+		lineageTag: 2b536619-21e2-433b-8d69-18283cf5b58f
+		summarizeBy: none
+		sourceColumn: mode_sort
+
+	partition dim_mode = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_mode.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"mode_of_study", type text}}),
+				    SortOrder = Table.AddColumn(Typed, "mode_sort", each List.PositionOf({"Full-time", "Part-time", "Apprenticeship"}, [mode_of_study]) + 1, Int64.Type)
+				in
+				    SortOrder
+

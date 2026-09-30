@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "nss-dashboard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "63f623c4-f78f-4aaa-b3c9-6a6c9483828f"
+  }
+}

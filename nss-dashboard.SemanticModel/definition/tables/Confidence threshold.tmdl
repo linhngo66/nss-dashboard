@@ -1,0 +1,26 @@
+/// What-if parameter: statistical confidence (%) required to call a result materially above or below benchmark (OfS materiality = more than 2.5 pp from benchmark). Default 90, matching the stored benchmark_category.
+table 'Confidence threshold'
+	lineageTag: 4c770ab8-d54b-485f-b6c1-adde546f0977
+
+	/// Selected confidence threshold (%); 90 when nothing or several values are selected.
+	measure 'Confidence threshold Value' = SELECTEDVALUE ( 'Confidence threshold'[Confidence threshold], 90 )
+		formatString: 0
+		lineageTag: 4b8273fb-6be5-4a0d-9ab9-530ca4e2988e
+
+	/// Selectable confidence threshold (%), 50-99.
+	column 'Confidence threshold'
+		dataType: int64
+		formatString: 0
+		lineageTag: 685026ef-3535-4b76-b67e-ee09e8f45046
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+	partition 'Confidence threshold' = calculated
+		mode: import
+		source = GENERATESERIES ( 50, 99, 1 )
+

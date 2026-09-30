@@ -1,0 +1,32 @@
+/// Level of study. 'All undergraduates' is the published total of the other three levels; use as a single-select slicer.
+table dim_level
+	lineageTag: b97a2258-0fe8-450c-9470-722342456c2f
+
+	/// Level of study. Primary key.
+	column level_of_study
+		dataType: string
+		isKey
+		lineageTag: 4157fa26-b83c-475b-bd32-cfa8c5563e55
+		summarizeBy: none
+		sourceColumn: level_of_study
+		sortByColumn: level_sort
+
+	/// Sort order for level_of_study: All undergraduates, First degree, Other undergraduate, Undergraduate with postgraduate component (added in Power Query).
+	column level_sort
+		dataType: int64
+		isHidden
+		lineageTag: 87459b7c-cc6c-4e9c-b2cb-77f180b6183d
+		summarizeBy: none
+		sourceColumn: level_sort
+
+	partition dim_level = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_level.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"level_of_study", type text}}),
+				    SortOrder = Table.AddColumn(Typed, "level_sort", each List.PositionOf({"All undergraduates", "First degree", "Other undergraduate", "Undergraduate with postgraduate component"}, [level_of_study]) + 1, Int64.Type)
+				in
+				    SortOrder
+
