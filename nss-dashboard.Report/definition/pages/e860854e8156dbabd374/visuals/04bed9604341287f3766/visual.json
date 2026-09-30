@@ -2,8 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "04bed9604341287f3766",
   "position": {
-    "x": 16.071748878923767,
-    "y": 187.12107623318386,
+    "x": 16,
+    "y": 180,
     "z": 11000,
     "height": 532,
     "width": 410,
@@ -345,58 +345,45 @@
             }
           }
         }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D9D9D9'"
+                    }
+                  }
+                }
+              }
+            },
+            "width": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "8d7680a7128eb25427e0",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_theme_question"
-              }
-            },
-            "Property": "theme_label"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "51df224c5e16a86b301b",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "fact_provider"
-                  }
-                },
-                "Property": "benchmark"
-              }
-            },
-            "Function": 1
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "8db02e080cab05a9eb95",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "fact_teach"
-              }
-            },
-            "Property": "Positivity % (derived)"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

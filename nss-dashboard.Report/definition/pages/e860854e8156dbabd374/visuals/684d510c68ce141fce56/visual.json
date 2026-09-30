@@ -2,8 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "684d510c68ce141fce56",
   "position": {
-    "x": 432.82674772036478,
-    "y": 187.72036474164133,
+    "x": 434,
+    "y": 180,
     "z": 10000,
     "height": 532,
     "width": 410,
@@ -346,44 +346,45 @@
             }
           }
         }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D9D9D9'"
+                    }
+                  }
+                }
+              }
+            },
+            "width": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "2efd2c9ad019e3914cc5",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_theme_question"
-              }
-            },
-            "Property": "question_short"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "50c86e0860282d0be0bd",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "fact_provider"
-                  }
-                },
-                "Property": "difference"
-              }
-            },
-            "Function": 1
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

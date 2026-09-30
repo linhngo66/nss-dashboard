@@ -11,7 +11,7 @@
       "type": "SharedResources"
     },
     "customTheme": {
-      "name": "MonashNSS-e21f20f3.json",
+      "name": "MonashNSS-6de7e2f4.json",
       "reportVersionAtImport": {
         "visual": "2.13.0",
         "report": "3.4.0",
@@ -19,6 +19,84 @@
       },
       "type": "RegisteredResources"
     }
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "2d853ff5ab87cb0e40a0",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_teach"
+              }
+            },
+            "Property": "benchmark_category"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "f",
+              "Entity": "fact_teach",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Not": {
+                  "Expression": {
+                    "In": {
+                      "Expressions": [
+                        {
+                          "Column": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Source": "f"
+                              }
+                            },
+                            "Property": "benchmark_category"
+                          }
+                        }
+                      ],
+                      "Values": [
+                        [
+                          {
+                            "Literal": {
+                              "Value": "null"
+                            }
+                          }
+                        ]
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User",
+        "isLockedInViewMode": true,
+        "objects": {
+          "general": [
+            {
+              "properties": {
+                "isInvertedSelectionMode": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "true"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
   },
   "objects": {
     "section": [
@@ -65,8 +143,8 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "MonashNSS-e21f20f3.json",
-          "path": "MonashNSS-e21f20f3.json",
+          "name": "MonashNSS-6de7e2f4.json",
+          "path": "MonashNSS-6de7e2f4.json",
           "type": "CustomTheme"
         }
       ]

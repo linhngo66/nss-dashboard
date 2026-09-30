@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "cee5c6a27ff8f776affc",
   "position": {
-    "x": 616.4663677130045,
-    "y": 417.86547085201795,
+    "x": 628,
+    "y": 414,
     "z": 15000,
-    "height": 301.91928251121078,
-    "width": 599.24663677130047,
+    "height": 298,
+    "width": 636,
     "tabOrder": 15000
   },
   "visual": {
@@ -86,7 +86,7 @@
             "columnAdjustment": {
               "expr": {
                 "Literal": {
-                  "Value": "'growToFit'"
+                  "Value": "'fitToContent'"
                 }
               }
             },
@@ -137,6 +137,13 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "defaultColumnWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "90D"
                 }
               }
             }
@@ -257,7 +264,7 @@
                           "min": {
                             "color": {
                               "Literal": {
-                                "Value": "'#F4CBA8'"
+                                "Value": "'#F08030'"
                               }
                             },
                             "value": {
@@ -269,7 +276,7 @@
                           "mid": {
                             "color": {
                               "Literal": {
-                                "Value": "'#F7F7F7'"
+                                "Value": "'#FFFFFF'"
                               }
                             },
                             "value": {
@@ -281,7 +288,7 @@
                           "max": {
                             "color": {
                               "Literal": {
-                                "Value": "'#BDD7EE'"
+                                "Value": "'#3A86C8'"
                               }
                             },
                             "value": {
@@ -334,6 +341,36 @@
                 }
               }
             }
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "200D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "dim_theme_question.theme_label"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "135D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Avg(fact_teach.difference)"
           }
         }
       ]
@@ -452,58 +489,45 @@
             }
           }
         }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D9D9D9'"
+                    }
+                  }
+                }
+              }
+            },
+            "width": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "a7e86603a0b949923db2",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_theme_question"
-              }
-            },
-            "Property": "theme_label"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "f05f0a2e9808c7503b70",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_mode"
-              }
-            },
-            "Property": "mode_of_study"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "3e5bcbc67295d03a1038",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "fact_teach"
-                  }
-                },
-                "Property": "difference"
-              }
-            },
-            "Function": 1
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

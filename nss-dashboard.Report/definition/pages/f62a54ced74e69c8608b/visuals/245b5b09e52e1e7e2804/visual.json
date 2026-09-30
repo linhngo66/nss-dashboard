@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "245b5b09e52e1e7e2804",
   "position": {
-    "x": 16.071748878923767,
-    "y": 107.91031390134529,
-    "z": 11000,
-    "height": 611.87443946188341,
-    "width": 794.40358744394621,
-    "tabOrder": 11000
+    "x": 16,
+    "y": 108,
+    "z": 14000,
+    "height": 604,
+    "width": 800,
+    "tabOrder": 14000
   },
   "visual": {
     "visualType": "pivotTable",
@@ -160,7 +160,7 @@
             "columnAdjustment": {
               "expr": {
                 "Literal": {
-                  "Value": "'growToFit'"
+                  "Value": "'fitToContent'"
                 }
               }
             },
@@ -211,6 +211,13 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "defaultColumnWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "90D"
                 }
               }
             }
@@ -331,7 +338,7 @@
                           "min": {
                             "color": {
                               "Literal": {
-                                "Value": "'#F4CBA8'"
+                                "Value": "'#F08030'"
                               }
                             },
                             "value": {
@@ -343,7 +350,7 @@
                           "mid": {
                             "color": {
                               "Literal": {
-                                "Value": "'#F7F7F7'"
+                                "Value": "'#FFFFFF'"
                               }
                             },
                             "value": {
@@ -355,7 +362,7 @@
                           "max": {
                             "color": {
                               "Literal": {
-                                "Value": "'#BDD7EE'"
+                                "Value": "'#3A86C8'"
                               }
                             },
                             "value": {
@@ -408,6 +415,64 @@
                 }
               }
             }
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "191.99532330077056D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "dim_cah.cah1_name"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "190D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "dim_cah.cah2_name"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "190D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "dim_cah.cah_name"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "72D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Avg(fact_teach.difference)"
           }
         }
       ]
@@ -526,86 +591,45 @@
             }
           }
         }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D9D9D9'"
+                    }
+                  }
+                }
+              }
+            },
+            "width": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "bc7b1b5d60651a0b2ed1",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_cah"
-              }
-            },
-            "Property": "cah1_name"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "a038368691e93b50d5da",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_cah"
-              }
-            },
-            "Property": "cah2_name"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "e3c7897dbc9d1e2b5a7a",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_cah"
-              }
-            },
-            "Property": "cah_name"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "a8a1c1d861d3891b0902",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_theme_question"
-              }
-            },
-            "Property": "theme_label"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "4eddb6d0b86b0a59da9b",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "fact_teach"
-                  }
-                },
-                "Property": "difference"
-              }
-            },
-            "Function": 1
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

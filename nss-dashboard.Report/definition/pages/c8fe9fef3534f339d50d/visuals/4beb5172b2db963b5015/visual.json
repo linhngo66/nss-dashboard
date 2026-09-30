@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "4beb5172b2db963b5015",
   "position": {
-    "x": 8.0358744394618835,
-    "y": 115.94618834080717,
+    "x": 16,
+    "y": 108,
     "z": 13000,
-    "height": 603.83856502242156,
-    "width": 595.8026905829596,
+    "height": 604,
+    "width": 600,
     "tabOrder": 13000
   },
   "visual": {
@@ -370,6 +370,44 @@
             }
           }
         }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D9D9D9'"
+                    }
+                  }
+                }
+              }
+            },
+            "width": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
       ]
     }
   },
@@ -432,96 +470,6 @@
           ]
         },
         "howCreated": "User"
-      },
-      {
-        "name": "e12e83266eabd2cb5810",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_theme_question"
-              }
-            },
-            "Property": "question_short"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "83e532e0b0145a4b28b8",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "fact_teach"
-                  }
-                },
-                "Property": "option1"
-              }
-            },
-            "Function": 0
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "6d9a75bb7ce97283476a",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "fact_teach"
-                  }
-                },
-                "Property": "option2"
-              }
-            },
-            "Function": 0
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "139c5ac81b06cb942385",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "fact_teach"
-                  }
-                },
-                "Property": "option3"
-              }
-            },
-            "Function": 0
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "672d8bdd8be6235b9ad0",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "fact_teach"
-                  }
-                },
-                "Property": "option4"
-              }
-            },
-            "Function": 0
-          }
-        },
-        "type": "Advanced"
       }
     ]
   }

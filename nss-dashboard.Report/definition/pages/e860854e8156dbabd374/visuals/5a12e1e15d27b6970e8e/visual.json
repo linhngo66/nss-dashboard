@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "5a12e1e15d27b6970e8e",
   "position": {
-    "x": 744,
+    "x": 1024,
     "y": 52,
-    "z": 8000,
+    "z": 3100,
     "height": 48,
-    "width": 80,
-    "tabOrder": 8000
+    "width": 64,
+    "tabOrder": 3100
   },
   "visual": {
     "visualType": "slicer",
@@ -194,7 +194,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Confidence threshold used to call a result above or below benchmark; default 90'"
+                  "Value": "'Confidence (%) filter'"
                 }
               }
             }
@@ -202,23 +202,5 @@
         }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "2d41f6912a90bd549169",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Confidence threshold"
-              }
-            },
-            "Property": "Confidence threshold"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

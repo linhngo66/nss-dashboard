@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "21aa2e228a6634509208",
   "position": {
-    "x": 825.3991031390135,
-    "y": 414.42152466367713,
-    "z": 10000,
-    "height": 305.36322869955154,
-    "width": 433.93721973094171,
-    "tabOrder": 10000
+    "x": 827.061574434918,
+    "y": 107.74746687451285,
+    "z": 13000,
+    "height": 298,
+    "width": 436,
+    "tabOrder": 13000
   },
   "visual": {
     "visualType": "clusteredBarChart",
@@ -403,72 +403,45 @@
             }
           }
         }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D9D9D9'"
+                    }
+                  }
+                }
+              }
+            },
+            "width": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "868b6cf5c95789c11005",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_cah"
-              }
-            },
-            "Property": "cah1_name"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "edae3d469078873091db",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_cah"
-              }
-            },
-            "Property": "cah2_name"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "3edeaf8ecc362020212c",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_cah"
-              }
-            },
-            "Property": "cah_name"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "3b411aa3e645562c7231",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "fact_teach"
-                  }
-                },
-                "Property": "difference"
-              }
-            },
-            "Function": 1
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }
