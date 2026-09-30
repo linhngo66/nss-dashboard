@@ -1,0 +1,35 @@
+theme_no,theme,question_no,question
+1,Teaching on my course,Q01,How good are teaching staff at explaining things?
+1,Teaching on my course,Q02,How often do teaching staff make the subject engaging?
+1,Teaching on my course,Q03,How often is the course intellectually stimulating?
+1,Teaching on my course,Q04,How often does your course challenge you to achieve your best work?
+2,Learning opportunities,Q05,To what extent have you had the chance to explore ideas and concepts in depth?
+2,Learning opportunities,Q06,How well does your course introduce subjects and skills in a way that builds on what you have already learned?
+2,Learning opportunities,Q07,To what extent have you had the chance to bring together information and ideas from different topics?
+2,Learning opportunities,Q08,To what extent does your course have the right balance of directed and independent study?
+2,Learning opportunities,Q09,How well has your course developed your knowledge and skills that you think you will need for your future?
+3,Assessment and feedback,Q10,How clear were the marking criteria used to assess your work?
+3,Assessment and feedback,Q11,How fair has the marking and assessment been on your course?
+3,Assessment and feedback,Q12,How well have assessments allowed you to demonstrate what you have learned?
+3,Assessment and feedback,Q13,How often have you received assessment feedback on time?
+3,Assessment and feedback,Q14,How often does feedback help you to improve your work?
+4,Academic support,Q15,How easy was it to contact teaching staff when you needed to?
+4,Academic support,Q16,How well have teaching staff supported your learning?
+5,Organisation and management,Q17,How well organised is your course?
+5,Organisation and management,Q18,How well were any changes to teaching on your course communicated?
+6,Learning resources,Q19,How well have the IT resources and facilities supported your learning?
+6,Learning resources,Q20,"How well have the library resources (e.g., books, online services and learning spaces) supported your learning?"
+6,Learning resources,Q21,"How easy is it to access subject specific resources (e.g., equipment, facilities, software) when you need them?"
+7,Student voice,Q22,To what extent do you get the right opportunities to give feedback on your course?
+7,Student voice,Q23,To what extent are students' opinions about the course valued by staff?
+7,Student voice,Q24,How clear is it that students' feedback on the course is acted on?
+,,Q25,How well does the students' union (association or guild) represent students' academic interests?
+,,Q26,How well communicated was information about your university/college's mental wellbeing support services?
+,,HC1,I received sufficient preparatory information prior to my placement(s).
+,,HC2,I was allocated placement(s) suitable for my course.
+,,HC3,I received appropriate supervision on placement(s).
+,,HC4,I was given opportunities to meet my required practice learning outcomes / competences.
+,,HC5,My contribution during placement(s) as part of the clinical team was valued.
+,,HC6,My practice supervisor(s) understood how my placement(s) related to the broader requirements of my course.
+,,Q27,"During your studies, how free did you feel to express your ideas, opinions, and beliefs?"
+,,Q28,"Overall, I am satisfied with the quality of the course."
