@@ -1,24 +1,6 @@
-/// NSS published results, Taught population. Grain: ukprn x mode_of_study x level_of_study x cah_code x question_no. Holds published totals alongside breakdowns (All subjects > CAH1 > CAH2 > CAH3; All undergraduates > levels): never sum across them. Never sum or average percentage columns. HC questions excluded in Power Query.
+/// NSS published results, Taught population, at the most detailed published grain: ukprn x mode_of_study x level_of_study x CAH3 subject x question_no. Totals (All subjects, CAH1, CAH2, All undergraduates) are not included, so rows are disjoint. Never sum or average percentage columns; pool option counts instead. HC questions excluded in Power Query.
 table fact_teach
 	lineageTag: 365d84be-9296-4382-a150-c6deb4b7653f
-
-	/// Published positivity measure. Returns the value only when exactly one fact row (provider x mode x level x subject x question) is in context; blank otherwise, because percentages must never be summed or averaged.
-	measure 'Positivity %' = IF ( COUNTROWS ( fact_teach ) = 1, MAX ( fact_teach[positivity_measure] ) / 100 )
-		formatString: 0.0%
-		displayFolder: Core
-		lineageTag: bf37c08b-52cc-4f96-8f25-d821085252f3
-
-	/// Published benchmark: expected positivity given the group's student and subject mix. Single fact row only; blank otherwise.
-	measure 'Benchmark %' = IF ( COUNTROWS ( fact_teach ) = 1, MAX ( fact_teach[benchmark] ) / 100 )
-		formatString: 0.0%
-		displayFolder: Core
-		lineageTag: 29b95661-28b0-4e75-8983-8b542830b37a
-
-	/// Published positivity minus benchmark, in percentage points. Single fact row only; blank otherwise.
-	measure 'Difference (pts)' = IF ( COUNTROWS ( fact_teach ) = 1, MAX ( fact_teach[difference] ) )
-		formatString: +0.0;-0.0;0.0
-		displayFolder: Core
-		lineageTag: 2598f797-0a1b-42eb-b4e0-6dfef67d0467
 
 	/// Published standard deviation of the positivity measure, in percentage points. Single fact row only; blank otherwise.
 	measure 'Standard deviation' = IF ( COUNTROWS ( fact_teach ) = 1, MAX ( fact_teach[standard_deviation] ) )
@@ -50,75 +32,62 @@ table fact_teach
 		displayFolder: Core
 		lineageTag: 3eac9d73-d08b-46d8-91ea-07dd8e4b6b18
 
-	/// DERIVED, NOT PUBLISHED. Positivity pooled from option counts: (option1 + option2) / (option1..option5); option5 is only used by Q28. Use for themes and other combined views. Blank unless exactly one provider, mode, level of study and subject level are selected. Matches the published figure within 0.1 pp on 95.0% of 4-option rows and 94.3% of Q28 rows (mismatches are rows with fractional option counts).
+	/// DERIVED, NOT PUBLISHED. Positivity pooled from option counts across all rows in context: (option1 + option2) / (option1..option5); option5 is only used by Q28. Rows are disjoint CAH3 x level x mode x provider groups, so pooling across providers, modes, levels and subjects is valid. Matches the published figure within 0.1 pp on about 95% of single rows (mismatches are rows with fractional option counts).
 	measure 'Positivity % (derived)' =
-			VAR _ok =
-			    HASONEVALUE ( dim_provider[ukprn] )
-			        && HASONEVALUE ( dim_mode[mode_of_study] )
-			        && HASONEVALUE ( dim_level[level_of_study] )
-			        && HASONEVALUE ( dim_cah[subject_level] )
 			VAR _positive = SUM ( fact_teach[option1] ) + SUM ( fact_teach[option2] )
 			VAR _answered =
 			    SUM ( fact_teach[option1] ) + SUM ( fact_teach[option2] ) + SUM ( fact_teach[option3] )
 			        + SUM ( fact_teach[option4] ) + SUM ( fact_teach[option5] )
 			RETURN
-			    IF ( _ok, DIVIDE ( _positive, _answered ) )
+			    DIVIDE ( _positive, _answered )
 		formatString: 0.0%
 		displayFolder: Core
 		lineageTag: 7ef2dfd9-1bda-4902-a035-2af5a48bd012
 
-	/// Respondents who answered the question (can be fractional where multi-subject students are split). Needs exactly one question, provider, level of study and subject level in context; may be summed across modes and across subjects within one subject level.
-	measure Responses =
-			VAR _ok =
-			    HASONEVALUE ( dim_theme_question[question_no] )
-			        && HASONEVALUE ( dim_provider[ukprn] )
-			        && HASONEVALUE ( dim_level[level_of_study] )
-			        && HASONEVALUE ( dim_cah[subject_level] )
-			RETURN
-			    IF ( _ok, SUM ( fact_teach[number_responses] ) )
+	/// Respondents who answered the question, summed over the rows in context (can be fractional where multi-subject students are split). Needs exactly one question in context, because summing across questions would count each student once per question.
+	measure Responses = IF ( HASONEVALUE ( dim_theme_question[question_no] ), SUM ( fact_teach[number_responses] ) )
 		formatString: #,0
 		displayFolder: Core
 		lineageTag: 7c982456-449f-4f6d-9efe-6cf33b706738
 
-	/// Published survey response headcount (all questions), counted once per provider x mode x level x subject group rather than once per question. Use for subject and segment views spanning several questions. Needs exactly one provider, level of study and subject level in context.
+	/// Published survey response headcount (whole students, all questions), counted once per provider x mode x level x subject group rather than once per question. Summed over subjects, a student on a multi-subject course counts once per subject.
 	measure 'Response headcount' =
-			VAR _ok =
-			    HASONEVALUE ( dim_provider[ukprn] )
-			        && HASONEVALUE ( dim_level[level_of_study] )
-			        && HASONEVALUE ( dim_cah[subject_level] )
 			VAR _groups =
 			    SUMMARIZE ( fact_teach, fact_teach[ukprn], fact_teach[mode_of_study], fact_teach[level_of_study], fact_teach[cah_code] )
 			RETURN
-			    IF ( _ok, SUMX ( _groups, CALCULATE ( MAX ( fact_teach[pub_response_headcount] ) ) ) )
+			    SUMX ( _groups, CALCULATE ( MAX ( fact_teach[pub_response_headcount] ) ) )
 		formatString: #,0
 		displayFolder: Core
 		lineageTag: b9acbc48-227b-42b3-b7a9-ffc8f023fe8f
 
-	/// Students surveyed (target population), counted once per provider x mode x level x subject group rather than once per question. Needs exactly one provider, level of study and subject level in context.
+	/// Students surveyed (target population, fractional where multi-subject students are split), counted once per provider x mode x level x subject group rather than once per question.
 	measure Population =
-			VAR _ok =
-			    HASONEVALUE ( dim_provider[ukprn] )
-			        && HASONEVALUE ( dim_level[level_of_study] )
-			        && HASONEVALUE ( dim_cah[subject_level] )
 			VAR _groups =
 			    SUMMARIZE ( fact_teach, fact_teach[ukprn], fact_teach[mode_of_study], fact_teach[level_of_study], fact_teach[cah_code] )
 			RETURN
-			    IF ( _ok, SUMX ( _groups, CALCULATE ( MAX ( fact_teach[number_population] ) ) ) )
+			    SUMX ( _groups, CALCULATE ( MAX ( fact_teach[number_population] ) ) )
 		formatString: #,0
 		displayFolder: Core
 		lineageTag: dca5b19a-140f-455e-a1fd-ca5a3096a48d
 
-	/// Published survey response rate for one provider x mode x level x subject group. Blank when more than one group is in context (rates cannot be combined).
+	/// Survey response rate. For one provider x mode x level x subject group it equals the published pub_resprate. For several groups it is pooled (derived): total response headcount / total survey population, where each group's survey population in whole students is headcount / published rate. Groups with a 0% rate are skipped.
 	measure 'Response rate %' =
 			VAR _groups =
-			    SUMMARIZE ( fact_teach, fact_teach[ukprn], fact_teach[mode_of_study], fact_teach[level_of_study], fact_teach[cah_code] )
+			    ADDCOLUMNS (
+			        SUMMARIZE ( fact_teach, fact_teach[ukprn], fact_teach[mode_of_study], fact_teach[level_of_study], fact_teach[cah_code] ),
+			        "@headcount", CALCULATE ( MAX ( fact_teach[pub_response_headcount] ) ),
+			        "@rate", CALCULATE ( MAX ( fact_teach[pub_resprate] ) )
+			    )
+			VAR _valid = FILTER ( _groups, [@rate] > 0 )
+			VAR _respondents = SUMX ( _valid, [@headcount] )
+			VAR _surveyed = SUMX ( _valid, [@headcount] * 100 / [@rate] )
 			RETURN
-			    IF ( COUNTROWS ( _groups ) = 1, MAX ( fact_teach[pub_resprate] ) / 100 )
+			    DIVIDE ( _respondents, _surveyed )
 		formatString: 0.0%
 		displayFolder: Core
 		lineageTag: 6c221da0-be9b-439f-a43d-1ae5a1dd69e0
 
-	/// Materially above / Materially below / Broadly in line with benchmark, using the OfS materiality columns and the selected Confidence threshold (default 90). 'Materially' means more than 2.5 pp from benchmark with at least that much statistical confidence. 'Not assessed' where the materiality columns are blank. Single fact row only.
+	/// Above / Below / In line with benchmark, using the OfS materiality columns and the selected Confidence threshold (default 90): above or below means a difference of more than 2.5 pts from benchmark with at least that much statistical confidence. 'Not assessed' where the materiality columns are blank. Single fact row only.
 	measure 'Benchmark category' =
 			VAR _t = [Confidence threshold Value]
 			RETURN
@@ -130,21 +99,21 @@ table fact_teach
 			            SWITCH (
 			                TRUE (),
 			                ISBLANK ( _above ), "Not assessed",
-			                _above >= _t, "Materially above benchmark",
-			                _below >= _t, "Materially below benchmark",
-			                "Broadly in line with benchmark"
+			                _above >= _t, "Above benchmark",
+			                _below >= _t, "Below benchmark",
+			                "In line with benchmark"
 			            )
 			    )
 		displayFolder: Significance
 		lineageTag: 522ae1f4-3790-4cac-b664-c53c5d9b0348
 
-	/// Numeric sort key for Benchmark category: 1 Materially above, 2 Broadly in line, 3 Materially below, 4 Not assessed.
+	/// Numeric sort key for Benchmark category: 1 Above, 2 In line with, 3 Below benchmark, 4 Not assessed.
 	measure 'Benchmark category sort' =
 			SWITCH (
 			    [Benchmark category],
-			    "Materially above benchmark", 1,
-			    "Broadly in line with benchmark", 2,
-			    "Materially below benchmark", 3,
+			    "Above benchmark", 1,
+			    "In line with benchmark", 2,
+			    "Below benchmark", 3,
 			    "Not assessed", 4
 			)
 		formatString: 0
@@ -155,9 +124,9 @@ table fact_teach
 	measure 'Benchmark category colour' =
 			SWITCH (
 			    [Benchmark category],
-			    "Materially above benchmark", "#1F4E79",
-			    "Materially below benchmark", "#C45A12",
-			    "Broadly in line with benchmark", "#A6A6A6",
+			    "Above benchmark", "#1F4E79",
+			    "Below benchmark", "#C45A12",
+			    "In line with benchmark", "#A6A6A6",
 			    "Not assessed", "#D9D9D9"
 			)
 		displayFolder: Significance
@@ -167,60 +136,44 @@ table fact_teach
 	measure 'Benchmark category marker' =
 			SWITCH (
 			    [Benchmark category],
-			    "Materially above benchmark", "▲",
-			    "Materially below benchmark", "▼",
-			    "Broadly in line with benchmark", "●",
+			    "Above benchmark", "▲",
+			    "Below benchmark", "▼",
+			    "In line with benchmark", "●",
 			    "Not assessed", "○"
 			)
 		displayFolder: Significance
 		lineageTag: c2889bc2-c65b-4da2-9108-4489f3187ca3
 
-	/// Number of published results (question rows) in context that are materially above benchmark at the selected Confidence threshold. Needs exactly one provider, level of study and subject level in context.
-	measure 'Questions materially above' =
+	/// Number of published results (fact rows) in context above benchmark at the selected Confidence threshold. With one provider, mode, level and subject selected this is a count of questions; with more selected it counts every provider x mode x level x subject x question result.
+	measure 'Questions above benchmark' =
 			VAR _t = [Confidence threshold Value]
-			VAR _ok =
-			    HASONEVALUE ( dim_provider[ukprn] )
-			        && HASONEVALUE ( dim_level[level_of_study] )
-			        && HASONEVALUE ( dim_cah[subject_level] )
 			RETURN
 			    IF (
-			        _ok && NOT ISEMPTY ( fact_teach ),
+			        NOT ISEMPTY ( fact_teach ),
 			        CALCULATE ( COUNTROWS ( fact_teach ), fact_teach[materially_above_bench] >= _t ) + 0
 			    )
 		formatString: #,0
 		displayFolder: Significance
 		lineageTag: daff4321-35c3-4eb5-89cb-3cdd5b9c520a
 
-	/// Number of published results (question rows) in context that are materially below benchmark at the selected Confidence threshold. Needs exactly one provider, level of study and subject level in context.
-	measure 'Questions materially below' =
+	/// Number of published results (fact rows) in context below benchmark at the selected Confidence threshold. With one provider, mode, level and subject selected this is a count of questions; with more selected it counts every result.
+	measure 'Questions below benchmark' =
 			VAR _t = [Confidence threshold Value]
-			VAR _ok =
-			    HASONEVALUE ( dim_provider[ukprn] )
-			        && HASONEVALUE ( dim_level[level_of_study] )
-			        && HASONEVALUE ( dim_cah[subject_level] )
 			RETURN
 			    IF (
-			        _ok && NOT ISEMPTY ( fact_teach ),
-			        CALCULATE (
-			            COUNTROWS ( fact_teach ),
-			            fact_teach[materially_below_bench] >= _t,
-			            NOT ISBLANK ( fact_teach[materially_above_bench] )
-			        ) + 0
+			        NOT ISEMPTY ( fact_teach ),
+			        CALCULATE ( COUNTROWS ( fact_teach ), fact_teach[materially_below_bench] >= _t ) + 0
 			    )
 		formatString: #,0
 		displayFolder: Significance
 		lineageTag: 1db1b03f-9cbc-41a0-98eb-b82387c1252c
 
-	/// Number of assessed results (question rows) in context that are neither materially above nor materially below benchmark at the selected Confidence threshold. Excludes 'Not assessed'. Needs exactly one provider, level of study and subject level in context.
-	measure 'Questions broadly in line' =
+	/// Number of assessed results (fact rows) in context neither above nor below benchmark at the selected Confidence threshold. Excludes 'Not assessed'.
+	measure 'Questions in line with benchmark' =
 			VAR _t = [Confidence threshold Value]
-			VAR _ok =
-			    HASONEVALUE ( dim_provider[ukprn] )
-			        && HASONEVALUE ( dim_level[level_of_study] )
-			        && HASONEVALUE ( dim_cah[subject_level] )
 			RETURN
 			    IF (
-			        _ok && NOT ISEMPTY ( fact_teach ),
+			        NOT ISEMPTY ( fact_teach ),
 			        CALCULATE (
 			            COUNTROWS ( fact_teach ),
 			            NOT ISBLANK ( fact_teach[materially_above_bench] ),
@@ -232,17 +185,12 @@ table fact_teach
 		displayFolder: Significance
 		lineageTag: bd834ef8-1ad9-4d0b-aace-b2c4c1e477e3
 
-	/// Number of results (question rows) in context with no materiality assessment (materially_* blank). Shown separately from 'Broadly in line'. Needs exactly one provider, level of study and subject level in context.
+	/// Number of results (fact rows) in context with no benchmark assessment (materiality columns blank).
 	measure 'Questions not assessed' =
-			VAR _ok =
-			    HASONEVALUE ( dim_provider[ukprn] )
-			        && HASONEVALUE ( dim_level[level_of_study] )
-			        && HASONEVALUE ( dim_cah[subject_level] )
-			RETURN
-			    IF (
-			        _ok && NOT ISEMPTY ( fact_teach ),
-			        CALCULATE ( COUNTROWS ( fact_teach ), ISBLANK ( fact_teach[materially_above_bench] ) ) + 0
-			    )
+			IF (
+			    NOT ISEMPTY ( fact_teach ),
+			    CALCULATE ( COUNTROWS ( fact_teach ), ISBLANK ( fact_teach[materially_above_bench] ) ) + 0
+			)
 		formatString: #,0
 		displayFolder: Significance
 		lineageTag: 81d4d3f2-fabf-4091-81a8-261a6f4835c1
@@ -291,13 +239,8 @@ table fact_teach
 		displayFolder: Reliability
 		lineageTag: e8d59112-c16e-460b-967b-c4a9301e1bdd
 
-	/// Share of respondents choosing the most positive option (option1) on the 4-option questions. Q28 (5-point scale) is excluded. Pooled from option counts when several rows are in context (derived). Needs exactly one provider, mode, level of study and subject level.
+	/// Share of respondents choosing the most positive option (option1) on the 4-option questions, pooled from option counts over the rows in context. Q28 (5-point scale) is excluded.
 	measure 'Option 1 share %' =
-			VAR _ok =
-			    HASONEVALUE ( dim_provider[ukprn] )
-			        && HASONEVALUE ( dim_mode[mode_of_study] )
-			        && HASONEVALUE ( dim_level[level_of_study] )
-			        && HASONEVALUE ( dim_cah[subject_level] )
 			VAR _o1 = CALCULATE ( SUM ( fact_teach[option1] ), KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" ) )
 			VAR _answered =
 			    CALCULATE (
@@ -305,18 +248,13 @@ table fact_teach
 			        KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" )
 			    )
 			RETURN
-			    IF ( _ok, DIVIDE ( _o1, _answered ) )
+			    DIVIDE ( _o1, _answered )
 		formatString: 0.0%
 		displayFolder: Distribution
 		lineageTag: ab6e68c0-276e-4f3b-ba0a-84fd339f98f8
 
-	/// Share of respondents choosing the second option (option2) on the 4-option questions. A high positivity made mostly of option 2 is lukewarm. Q28 excluded. Needs exactly one provider, mode, level of study and subject level.
+	/// Share of respondents choosing the second option (option2) on the 4-option questions, pooled from option counts over the rows in context. Q28 excluded.
 	measure 'Option 2 share %' =
-			VAR _ok =
-			    HASONEVALUE ( dim_provider[ukprn] )
-			        && HASONEVALUE ( dim_mode[mode_of_study] )
-			        && HASONEVALUE ( dim_level[level_of_study] )
-			        && HASONEVALUE ( dim_cah[subject_level] )
 			VAR _o2 = CALCULATE ( SUM ( fact_teach[option2] ), KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" ) )
 			VAR _answered =
 			    CALCULATE (
@@ -324,18 +262,13 @@ table fact_teach
 			        KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" )
 			    )
 			RETURN
-			    IF ( _ok, DIVIDE ( _o2, _answered ) )
+			    DIVIDE ( _o2, _answered )
 		formatString: 0.0%
 		displayFolder: Distribution
 		lineageTag: fcb17d5e-bfba-4531-956a-cc5171a892a7
 
-	/// Share of respondents choosing a negative option (option3 + option4) on the 4-option questions. Q28 excluded. Needs exactly one provider, mode, level of study and subject level.
+	/// Share of respondents choosing a negative option (option3 + option4) on the 4-option questions, pooled from option counts over the rows in context. Q28 excluded.
 	measure 'Negative share %' =
-			VAR _ok =
-			    HASONEVALUE ( dim_provider[ukprn] )
-			        && HASONEVALUE ( dim_mode[mode_of_study] )
-			        && HASONEVALUE ( dim_level[level_of_study] )
-			        && HASONEVALUE ( dim_cah[subject_level] )
 			VAR _negative =
 			    CALCULATE ( SUM ( fact_teach[option3] ) + SUM ( fact_teach[option4] ), KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" ) )
 			VAR _answered =
@@ -344,24 +277,19 @@ table fact_teach
 			        KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" )
 			    )
 			RETURN
-			    IF ( _ok, DIVIDE ( _negative, _answered ) )
+			    DIVIDE ( _negative, _answered )
 		formatString: 0.0%
 		displayFolder: Distribution
 		lineageTag: 918f7813-9e48-48a2-91ec-e4ac19b89aa3
 
-	/// 'This does not apply to me' responses as a share of all responses including them (not_applicable / (option1..option5 + not_applicable)). Needs exactly one provider, mode, level of study and subject level.
+	/// 'This does not apply to me' responses as a share of all responses including them (not_applicable / (option1..option5 + not_applicable)), pooled over the rows in context.
 	measure 'Not applicable %' =
-			VAR _ok =
-			    HASONEVALUE ( dim_provider[ukprn] )
-			        && HASONEVALUE ( dim_mode[mode_of_study] )
-			        && HASONEVALUE ( dim_level[level_of_study] )
-			        && HASONEVALUE ( dim_cah[subject_level] )
 			VAR _na = SUM ( fact_teach[not_applicable] )
 			VAR _answered =
 			    SUM ( fact_teach[option1] ) + SUM ( fact_teach[option2] ) + SUM ( fact_teach[option3] )
 			        + SUM ( fact_teach[option4] ) + SUM ( fact_teach[option5] )
 			RETURN
-			    IF ( _ok, DIVIDE ( _na, _answered + _na ) )
+			    DIVIDE ( _na, _answered + _na )
 		formatString: 0.0%
 		displayFolder: Distribution
 		lineageTag: d5238edd-9271-41bb-bf14-c2d8dba8a95d
@@ -444,35 +372,26 @@ table fact_teach
 		displayFolder: Sector
 		lineageTag: f5630206-c159-421c-ada1-0b4bc39c6fb5
 
-	/// Estimates how many more students would need to respond positively to reach benchmark: number_population x -MIN(difference, 0) / 100, calculated per question row and summed. When rolled up over several questions one student can count on several questions. Needs exactly one provider, level of study and subject level in context.
-	measure 'Students below benchmark (est.)' =
-			VAR _ok =
-			    HASONEVALUE ( dim_provider[ukprn] )
-			        && HASONEVALUE ( dim_level[level_of_study] )
-			        && HASONEVALUE ( dim_cah[subject_level] )
-			RETURN
-			    IF (
-			        _ok,
-			        SUMX ( fact_teach, fact_teach[number_population] * MAX ( -fact_teach[difference], 0 ) / 100 )
-			    )
+	/// Estimates how many more students would need to respond positively to reach benchmark: number_population x -MIN(difference, 0) / 100, calculated per result row and summed. When rolled up over several questions one student can count on several questions.
+	measure 'Students below benchmark (est.)' = SUMX ( fact_teach, fact_teach[number_population] * MAX ( -fact_teach[difference], 0 ) / 100 )
 		formatString: #,0
 		displayFolder: Priority
 		lineageTag: 575f834e-db1c-4571-8a1d-ccc8c0b01575
 
-	/// Number of CAH1 subjects with at least one published result in the current context (e.g. for the selected provider, mode and level). Counts what was published; unpublished and suppressed combinations are not in the data.
-	measure 'Subjects published (CAH1)' = CALCULATE ( DISTINCTCOUNT ( fact_teach[cah_code] ), dim_cah[subject_level] = "CAH1" )
+	/// Number of CAH1 subject areas with at least one published CAH3 result in the current context. Counts what was published; unpublished and suppressed combinations are not in the data.
+	measure 'Subjects published (CAH1)' = DISTINCTCOUNT ( fact_teach[cah1_code] )
 		formatString: #,0
 		displayFolder: Coverage
 		lineageTag: e10b5eb0-dcd9-4017-a23a-25c69a4b2d1e
 
-	/// Number of CAH2 subjects with at least one published result in the current context. Counts what was published only.
-	measure 'Subjects published (CAH2)' = CALCULATE ( DISTINCTCOUNT ( fact_teach[cah_code] ), dim_cah[subject_level] = "CAH2" )
+	/// Number of CAH2 subject groups with at least one published CAH3 result in the current context.
+	measure 'Subjects published (CAH2)' = DISTINCTCOUNT ( fact_teach[cah2_code] )
 		formatString: #,0
 		displayFolder: Coverage
 		lineageTag: 123ca863-ce47-44b5-a939-4248b50e39f6
 
-	/// Number of CAH3 subjects with at least one published result in the current context. Counts what was published only.
-	measure 'Subjects published (CAH3)' = CALCULATE ( DISTINCTCOUNT ( fact_teach[cah_code] ), dim_cah[subject_level] = "CAH3" )
+	/// Number of CAH3 subjects with at least one published result in the current context.
+	measure 'Subjects published (CAH3)' = DISTINCTCOUNT ( fact_teach[cah_code] )
 		formatString: #,0
 		displayFolder: Coverage
 		lineageTag: 62663c23-19ab-4535-924e-ca306aaa881d
@@ -483,20 +402,35 @@ table fact_teach
 		displayFolder: Coverage
 		lineageTag: 9369568a-97ce-45a3-ae2f-abfb3c379032
 
-	/// Number of published results (fact rows) in context that are low-reliability: fewer responses than the selected Reliability threshold, or self-benchmarked (contr_benchmark > 50). Needs exactly one level of study and subject level in context.
+	/// Number of published results (fact rows) in context that are low-reliability: fewer responses than the selected Reliability threshold, or self-benchmarked (contr_benchmark > 50).
 	measure 'Results flagged low-reliability' =
 			VAR _t = [Reliability threshold Value]
-			VAR _ok =
-			    HASONEVALUE ( dim_level[level_of_study] )
-			        && HASONEVALUE ( dim_cah[subject_level] )
 			RETURN
 			    IF (
-			        _ok && NOT ISEMPTY ( fact_teach ),
+			        NOT ISEMPTY ( fact_teach ),
 			        COUNTROWS ( FILTER ( fact_teach, fact_teach[number_responses] < _t || fact_teach[contr_benchmark] > 50 ) ) + 0
 			    )
 		formatString: #,0
 		displayFolder: Coverage
 		lineageTag: ac872348-4fde-4912-b587-2aa8fff7859c
+
+	/// Share of assessed results (provider x subject x mode x level x question rows in context) that are above benchmark at the selected Confidence threshold. Denominator excludes 'Not assessed', so Above, In line and Below sum to 100%.
+	measure 'Above benchmark %' = DIVIDE ( [Questions above benchmark], [Questions above benchmark] + [Questions in line with benchmark] + [Questions below benchmark] )
+		formatString: 0.0%
+		displayFolder: Significance
+		lineageTag: 8f25c5dd-2af6-4dc7-b9ce-f4e5be4f5d8e
+
+	/// Share of assessed results in context that are in line with benchmark at the selected Confidence threshold. Denominator excludes 'Not assessed'.
+	measure 'In line with benchmark %' = DIVIDE ( [Questions in line with benchmark], [Questions above benchmark] + [Questions in line with benchmark] + [Questions below benchmark] )
+		formatString: 0.0%
+		displayFolder: Significance
+		lineageTag: 2ec2d27b-4ea2-42ae-8587-b01cc7b965b5
+
+	/// Share of assessed results in context that are below benchmark at the selected Confidence threshold. Denominator excludes 'Not assessed'.
+	measure 'Below benchmark %' = DIVIDE ( [Questions below benchmark], [Questions above benchmark] + [Questions in line with benchmark] + [Questions below benchmark] )
+		formatString: 0.0%
+		displayFolder: Significance
+		lineageTag: eab5bb18-70b0-452c-ad54-f708bf7a127e
 
 	/// UK Provider Reference Number. FK to dim_provider.
 	column ukprn
@@ -530,7 +464,7 @@ table fact_teach
 		summarizeBy: none
 		sourceColumn: level_of_study
 
-	/// Subject level (denormalised; use dim_cah).
+	/// Always CAH3 (denormalised; not needed in the report).
 	column subject_level
 		dataType: string
 		isHidden
@@ -629,6 +563,7 @@ table fact_teach
 	/// Published positivity, % on a 0-100 scale. Never sum or average.
 	column positivity_measure
 		dataType: double
+		formatString: 0.0
 		lineageTag: 52fddb6c-45ee-418f-b40f-60fc5a19cb1a
 		summarizeBy: none
 		sourceColumn: positivity_measure
@@ -643,6 +578,7 @@ table fact_teach
 	/// Benchmark positivity, % on a 0-100 scale. Never sum or average.
 	column benchmark
 		dataType: double
+		formatString: 0.0
 		lineageTag: 6158c9f5-6611-44e5-ac58-0043d975d6ac
 		summarizeBy: none
 		sourceColumn: benchmark
@@ -650,6 +586,7 @@ table fact_teach
 	/// positivity_measure - benchmark, in percentage points.
 	column difference
 		dataType: double
+		formatString: +0.0;-0.0;0.0
 		lineageTag: 3195f866-7c68-484b-84f8-54e1fce53c88
 		summarizeBy: none
 		sourceColumn: difference
@@ -685,6 +622,7 @@ table fact_teach
 	/// Lower 95% CI of difference, pp.
 	column difference_lowerci95
 		dataType: double
+		formatString: +0.0;-0.0;0.0
 		lineageTag: 009c9c45-f0ef-4159-a692-f65d1fdeccfb
 		summarizeBy: none
 		sourceColumn: difference_lowerci95
@@ -692,6 +630,7 @@ table fact_teach
 	/// Upper 95% CI of difference, pp.
 	column difference_upperci95
 		dataType: double
+		formatString: +0.0;-0.0;0.0
 		lineageTag: df99860b-a0af-4a0c-b6fb-758b2465a2d6
 		summarizeBy: none
 		sourceColumn: difference_upperci95
@@ -720,6 +659,7 @@ table fact_teach
 	/// Published response rate for the group, % 0-100.
 	column pub_resprate
 		dataType: double
+		formatString: 0.0
 		lineageTag: b038e34b-b813-4a36-964d-a37df9266f31
 		summarizeBy: none
 		sourceColumn: pub_resprate
@@ -731,6 +671,45 @@ table fact_teach
 		summarizeBy: none
 		sourceColumn: benchmark_category
 
+	/// CAH1 parent code of the subject (denormalised; use dim_cah).
+	column cah1_code
+		dataType: string
+		isHidden
+		lineageTag: 9f8625fe-e853-4d8e-9742-ea9b81f99f5a
+		summarizeBy: none
+		sourceColumn: cah1_code
+
+	/// CAH1 parent name (denormalised; use dim_cah).
+	column cah1_name
+		dataType: string
+		isHidden
+		lineageTag: 543cd62d-4038-41f1-8b5f-00946e08a070
+		summarizeBy: none
+		sourceColumn: cah1_name
+
+	/// CAH2 parent code of the subject (denormalised; use dim_cah).
+	column cah2_code
+		dataType: string
+		isHidden
+		lineageTag: 6a0c235f-0786-42fd-b199-72639c081bdf
+		summarizeBy: none
+		sourceColumn: cah2_code
+
+	/// CAH2 parent name (denormalised; use dim_cah).
+	column cah2_name
+		dataType: string
+		isHidden
+		lineageTag: aabbc810-6a55-4563-800f-3649c723c0be
+		summarizeBy: none
+		sourceColumn: cah2_name
+
+	column benchmark_pct = fact_teach[benchmark] / 100
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6c6d2ff2-2943-478d-b5e9-8bf0da017809
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
 	partition fact_teach = m
 		mode: import
 		source =
@@ -739,7 +718,8 @@ table fact_teach
 				    NoHC = Table.SelectRows(Source, each not Text.StartsWith([question_no], "HC")),
 				    Typed = Table.TransformColumnTypes(NoHC, {
 				        {"ukprn", type text}, {"provider_name", type text}, {"mode_of_study", type text}, {"level_of_study", type text},
-				        {"subject_level", type text}, {"cah_code", type text}, {"cah_name", type text}, {"theme_no", Int64.Type}, {"question_no", type text},
+				        {"subject_level", type text}, {"cah1_code", type text}, {"cah1_name", type text}, {"cah2_code", type text}, {"cah2_name", type text},
+				        {"cah_code", type text}, {"cah_name", type text}, {"theme_no", Int64.Type}, {"question_no", type text},
 				        {"number_responses", type number}, {"number_population", type number},
 				        {"option1", type number}, {"option2", type number}, {"option3", type number}, {"option4", type number}, {"option5", type number}, {"not_applicable", type number},
 				        {"positivity_measure", type number}, {"standard_deviation", type number}, {"benchmark", type number}, {"difference", type number}, {"contr_benchmark", type number},

@@ -18,3 +18,15 @@ relationship fact_teach_level_of_study_dim_level_level_of_study
 	fromColumn: fact_teach.level_of_study
 	toColumn: dim_level.level_of_study
 
+relationship fact_provider_ukprn_dim_provider_ukprn
+	fromColumn: fact_provider.ukprn
+	toColumn: dim_provider.ukprn
+
+relationship fact_provider_question_no_dim_theme_question_question_no
+	fromColumn: fact_provider.question_no
+	toColumn: dim_theme_question.question_no
+
+relationship fact_provider_mode_of_study_dim_mode_mode_of_study
+	fromColumn: fact_provider.mode_of_study
+	toColumn: dim_mode.mode_of_study
+

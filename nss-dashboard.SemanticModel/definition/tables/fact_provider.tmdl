@@ -1,0 +1,419 @@
+/// NSS published provider totals (All subjects x All undergraduates), Taught population. Grain: ukprn x mode_of_study x question_no. The OfS published figures for the provider as a whole; not related to dim_cah or dim_level. Never combine with fact_teach rows. Never sum or average percentage columns. HC questions excluded in Power Query.
+table fact_provider
+	lineageTag: 88d9dbff-a494-4609-85f4-84beb8d24d99
+
+	/// Published provider-level benchmark. Single row only (one provider, mode and question).
+	measure 'Provider benchmark %' = IF ( COUNTROWS ( fact_provider ) = 1, MAX ( fact_provider[benchmark] ) / 100 )
+		formatString: 0.0%
+		displayFolder: Provider
+		lineageTag: fd37ecaf-553a-4c42-ab10-546235a448ca
+
+	/// Published provider-level positivity minus benchmark, in percentage points. Single row only (one provider, mode and question).
+	measure 'Provider difference (pts)' = IF ( COUNTROWS ( fact_provider ) = 1, MAX ( fact_provider[difference] ) )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: Provider
+		lineageTag: ab69f0dc-2f84-42b3-9396-1c1a793d6792
+
+	/// Lower bound of the published 95% confidence interval for the provider-level difference. Single row only.
+	measure 'Provider difference lower CI 95 (pts)' = IF ( COUNTROWS ( fact_provider ) = 1, MAX ( fact_provider[difference_lowerci95] ) )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: Provider
+		lineageTag: 044b8407-0f11-48df-8ef4-ee46465660e9
+
+	/// Upper bound of the published 95% confidence interval for the provider-level difference. Single row only.
+	measure 'Provider difference upper CI 95 (pts)' = IF ( COUNTROWS ( fact_provider ) = 1, MAX ( fact_provider[difference_upperci95] ) )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: Provider
+		lineageTag: 131b2d15-cee7-4835-b623-2fb19d761856
+
+	/// DERIVED, NOT PUBLISHED. Positivity pooled from the provider-level option counts over the rows in context: (option1 + option2) / (option1..option5). Pooling across providers and modes is valid because provider totals do not overlap.
+	measure 'Provider positivity % (derived)' =
+			VAR _positive = SUM ( fact_provider[option1] ) + SUM ( fact_provider[option2] )
+			VAR _answered =
+			    SUM ( fact_provider[option1] ) + SUM ( fact_provider[option2] ) + SUM ( fact_provider[option3] )
+			        + SUM ( fact_provider[option4] )
+			RETURN
+			    DIVIDE ( _positive, _answered )
+		formatString: 0.0%
+		displayFolder: Provider
+		lineageTag: a8f88da6-d191-438b-9ef1-da1c9f18276a
+
+	/// Survey response rate. For one provider and mode it equals the published pub_resprate. For several it is pooled (derived): total response headcount / total survey population, where each provider x mode's survey population in whole students is headcount / published rate.
+	measure 'Provider response rate %' =
+			VAR _groups =
+			    ADDCOLUMNS (
+			        SUMMARIZE ( fact_provider, fact_provider[ukprn], fact_provider[mode_of_study] ),
+			        "@headcount", CALCULATE ( MAX ( fact_provider[pub_response_headcount] ) ),
+			        "@rate", CALCULATE ( MAX ( fact_provider[pub_resprate] ) )
+			    )
+			VAR _valid = FILTER ( _groups, [@rate] > 0 )
+			RETURN
+			    DIVIDE ( SUMX ( _valid, [@headcount] ), SUMX ( _valid, [@headcount] * 100 / [@rate] ) )
+		formatString: 0.0%
+		displayFolder: Provider
+		lineageTag: 17347c96-f51e-4312-9cd5-49b5b3ee4e93
+
+	/// Share of provider-level results (provider x mode x question rows in context) above benchmark at the selected Confidence threshold. For one provider and mode this is the share of its questions above benchmark.
+	measure 'Provider above benchmark %' =
+			VAR _t = [Confidence threshold Value]
+			VAR _assessed = CALCULATE ( COUNTROWS ( fact_provider ), NOT ISBLANK ( fact_provider[materially_above_bench] ) )
+			RETURN
+			    DIVIDE ( CALCULATE ( COUNTROWS ( fact_provider ), fact_provider[materially_above_bench] >= _t ) + 0, _assessed )
+		formatString: 0.0%
+		displayFolder: Provider
+		lineageTag: e51861d8-7fb5-428f-9271-79f296637612
+
+	/// Share of provider-level results in context neither above nor below benchmark at the selected Confidence threshold.
+	measure 'Provider in line with benchmark %' =
+			VAR _t = [Confidence threshold Value]
+			VAR _assessed = CALCULATE ( COUNTROWS ( fact_provider ), NOT ISBLANK ( fact_provider[materially_above_bench] ) )
+			VAR _inline =
+			    CALCULATE (
+			        COUNTROWS ( fact_provider ),
+			        NOT ISBLANK ( fact_provider[materially_above_bench] ),
+			        fact_provider[materially_above_bench] < _t,
+			        fact_provider[materially_below_bench] < _t
+			    )
+			RETURN
+			    DIVIDE ( _inline + 0, _assessed )
+		formatString: 0.0%
+		displayFolder: Provider
+		lineageTag: 269b43b8-7d14-47ce-bc62-16c425dc3d5c
+
+	/// Share of provider-level results in context below benchmark at the selected Confidence threshold. For one provider and mode this is the share of its questions below benchmark.
+	measure 'Provider below benchmark %' =
+			VAR _t = [Confidence threshold Value]
+			VAR _assessed = CALCULATE ( COUNTROWS ( fact_provider ), NOT ISBLANK ( fact_provider[materially_above_bench] ) )
+			RETURN
+			    DIVIDE ( CALCULATE ( COUNTROWS ( fact_provider ), fact_provider[materially_below_bench] >= _t ) + 0, _assessed )
+		formatString: 0.0%
+		displayFolder: Provider
+		lineageTag: 1c064a79-aea5-45e6-a398-3b56e19d4972
+
+	/// Above / Below / In line with benchmark for one provider-level result, using the selected Confidence threshold (default 90): above or below means a difference of more than 2.5 pts with at least that much confidence. Single row only.
+	measure 'Provider benchmark category' =
+			VAR _t = [Confidence threshold Value]
+			RETURN
+			    IF (
+			        COUNTROWS ( fact_provider ) = 1,
+			        VAR _above = MAX ( fact_provider[materially_above_bench] )
+			        VAR _below = MAX ( fact_provider[materially_below_bench] )
+			        RETURN
+			            SWITCH (
+			                TRUE (),
+			                ISBLANK ( _above ), "Not assessed",
+			                _above >= _t, "Above benchmark",
+			                _below >= _t, "Below benchmark",
+			                "In line with benchmark"
+			            )
+			    )
+		displayFolder: Provider
+		lineageTag: a8964572-e019-4dd0-8c9f-a33a9efdf891
+
+	/// Hex colour for the provider-level Benchmark category (colour-blind safe): above #1F4E79, below #C45A12, in line #A6A6A6, not assessed #D9D9D9. Faded (hex alpha 59) when the result rests on fewer responses than the Reliability threshold or the provider is more than half its own benchmark population.
+	measure 'Provider benchmark category colour' =
+			VAR _colour =
+			    SWITCH (
+			        [Provider benchmark category],
+			        "Above benchmark", "#1F4E79",
+			        "Below benchmark", "#C45A12",
+			        "In line with benchmark", "#A6A6A6",
+			        "Not assessed", "#D9D9D9"
+			    )
+			VAR _lowReliability =
+			    MAX ( fact_provider[number_responses] ) < [Reliability threshold Value]
+			        || MAX ( fact_provider[contr_benchmark] ) > 50
+			RETURN
+			    IF ( NOT ISBLANK ( _colour ), _colour & IF ( _lowReliability, "59", "" ) )
+		displayFolder: Provider
+		lineageTag: c8c4af48-d41a-443b-8852-8894954bafce
+
+	/// Non-colour cue for the provider-level Benchmark category: ▲ above, ▼ below, ● in line, ○ not assessed.
+	measure 'Provider benchmark category marker' =
+			SWITCH (
+			    [Provider benchmark category],
+			    "Above benchmark", "▲",
+			    "Below benchmark", "▼",
+			    "In line with benchmark", "●",
+			    "Not assessed", "○"
+			)
+		displayFolder: Provider
+		lineageTag: 12c8818a-eee4-4903-add0-eca36ae5dcc2
+
+	/// Share of respondents choosing the most positive option on the 4-option questions, pooled from provider-level option counts in context. Q28 (5-point scale) is excluded.
+	measure 'Provider option 1 share %' =
+			VAR _o1 = CALCULATE ( SUM ( fact_provider[option1] ), KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" ) )
+			VAR _answered =
+			    CALCULATE (
+			        SUM ( fact_provider[option1] ) + SUM ( fact_provider[option2] ) + SUM ( fact_provider[option3] ) + SUM ( fact_provider[option4] ),
+			        KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" )
+			    )
+			RETURN
+			    DIVIDE ( _o1, _answered )
+		formatString: 0.0%
+		displayFolder: Provider
+		lineageTag: fb7380ae-7685-4c05-b059-23d884ea1cb8
+
+	/// Share of respondents choosing the second option on the 4-option questions, pooled from provider-level option counts. Q28 excluded.
+	measure 'Provider option 2 share %' =
+			VAR _o2 = CALCULATE ( SUM ( fact_provider[option2] ), KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" ) )
+			VAR _answered =
+			    CALCULATE (
+			        SUM ( fact_provider[option1] ) + SUM ( fact_provider[option2] ) + SUM ( fact_provider[option3] ) + SUM ( fact_provider[option4] ),
+			        KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" )
+			    )
+			RETURN
+			    DIVIDE ( _o2, _answered )
+		formatString: 0.0%
+		displayFolder: Provider
+		lineageTag: 80d94893-661a-47e2-bd7a-79ea8bb3642e
+
+	/// Share of respondents choosing a negative option (option3 + option4) on the 4-option questions, pooled from provider-level option counts. Q28 excluded.
+	measure 'Provider negative share %' =
+			VAR _negative =
+			    CALCULATE ( SUM ( fact_provider[option3] ) + SUM ( fact_provider[option4] ), KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" ) )
+			VAR _answered =
+			    CALCULATE (
+			        SUM ( fact_provider[option1] ) + SUM ( fact_provider[option2] ) + SUM ( fact_provider[option3] ) + SUM ( fact_provider[option4] ),
+			        KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" )
+			    )
+			RETURN
+			    DIVIDE ( _negative, _answered )
+		formatString: 0.0%
+		displayFolder: Provider
+		lineageTag: a6c2e94b-75ba-45a4-bcbc-954c73d07c73
+
+	/// Dynamic title for the provider difference-by-question chart: asks the user to select one provider and one mode when the published values cannot be shown.
+	measure 'Provider difference chart title' =
+			IF (
+			    HASONEVALUE ( dim_provider[ukprn] ) && HASONEVALUE ( dim_mode[mode_of_study] ),
+			    "Difference from benchmark by question",
+			    "Difference from benchmark by question: select one provider and one mode"
+			)
+		displayFolder: Provider
+		lineageTag: 42e09fc7-ec2c-4312-a342-ca0763076334
+
+	/// UK Provider Reference Number. FK to dim_provider.
+	column ukprn
+		dataType: string
+		isHidden
+		lineageTag: b55eb28a-0a35-4db2-9af5-9a39a6e8ce66
+		summarizeBy: none
+		sourceColumn: ukprn
+
+	/// Provider name (denormalised; use dim_provider).
+	column provider_name
+		dataType: string
+		isHidden
+		lineageTag: 6f4161a7-aa38-49e7-8173-2fd72069c303
+		summarizeBy: none
+		sourceColumn: provider_name
+
+	/// FK to dim_mode.
+	column mode_of_study
+		dataType: string
+		isHidden
+		lineageTag: 5ed6fed7-9f59-4d46-8292-c531ad3bccae
+		summarizeBy: none
+		sourceColumn: mode_of_study
+
+	/// Theme number (denormalised; use dim_theme_question).
+	column theme_no
+		dataType: int64
+		isHidden
+		lineageTag: e32a949c-82fa-4fc3-889e-2cacbd79e277
+		summarizeBy: none
+		sourceColumn: theme_no
+
+	/// Question code. FK to dim_theme_question.
+	column question_no
+		dataType: string
+		isHidden
+		lineageTag: ff230f64-d4dd-41b5-924f-332898878d8d
+		summarizeBy: none
+		sourceColumn: question_no
+
+	/// Respondents who answered the question.
+	column number_responses
+		dataType: double
+		lineageTag: 41ea2fd2-f8f0-459e-9cb3-5adac90874e5
+		summarizeBy: none
+		sourceColumn: number_responses
+
+	/// Students surveyed (target population).
+	column number_population
+		dataType: double
+		lineageTag: 9cf61e0c-4762-4b33-bf20-70b259e4fdf9
+		summarizeBy: none
+		sourceColumn: number_population
+
+	/// Respondents choosing option 1 (most positive).
+	column option1
+		dataType: double
+		lineageTag: 87bb7b66-cc68-4211-b50e-7a1a029982ca
+		summarizeBy: none
+		sourceColumn: option1
+
+	/// Respondents choosing option 2.
+	column option2
+		dataType: double
+		lineageTag: a55f8d7a-b9da-464a-9294-7351dee12411
+		summarizeBy: none
+		sourceColumn: option2
+
+	/// Respondents choosing option 3.
+	column option3
+		dataType: double
+		lineageTag: ea9e072e-707b-4c15-b34f-62b75d8034ad
+		summarizeBy: none
+		sourceColumn: option3
+
+	/// Respondents choosing option 4.
+	column option4
+		dataType: double
+		lineageTag: d9ce43a1-3d4f-40f9-974e-563062273cb3
+		summarizeBy: none
+		sourceColumn: option4
+
+	/// Respondents choosing option 5 (5-point question Q28 only).
+	column option5
+		dataType: double
+		lineageTag: 8bcf87e7-83a2-4bae-815f-914d2fab120d
+		summarizeBy: none
+		sourceColumn: option5
+
+	/// 'This does not apply to me' responses; excluded from number_responses.
+	column not_applicable
+		dataType: double
+		lineageTag: d855f7b4-bf6f-4636-a2a5-20b27a7fcde6
+		summarizeBy: none
+		sourceColumn: not_applicable
+
+	/// Published positivity, % on a 0-100 scale. Never sum or average.
+	column positivity_measure
+		dataType: double
+		formatString: 0.0
+		lineageTag: 8319694c-01b5-4dd7-a5fb-ecf86af77e79
+		summarizeBy: none
+		sourceColumn: positivity_measure
+
+	/// Standard deviation of the positivity measure.
+	column standard_deviation
+		dataType: double
+		lineageTag: 56b2b3da-10cc-46cf-8d7c-ecd272c7b8e0
+		summarizeBy: none
+		sourceColumn: standard_deviation
+
+	/// Benchmark positivity, % on a 0-100 scale. Never sum or average.
+	column benchmark
+		dataType: double
+		formatString: 0.0
+		lineageTag: 1c0a2e79-0007-400e-819e-509508d4098c
+		summarizeBy: none
+		sourceColumn: benchmark
+
+	/// positivity_measure - benchmark, in percentage points.
+	column difference
+		dataType: double
+		formatString: +0.0;-0.0;0.0
+		lineageTag: d7e5cfee-c968-4d93-9eec-b59f663c357e
+		summarizeBy: none
+		sourceColumn: difference
+
+	/// Provider's own share of its benchmark population, % 0-100. Above 50 the comparison is weak.
+	column contr_benchmark
+		dataType: double
+		lineageTag: 2c0d4e9f-0351-4b11-b24d-6c68e6ecc6e1
+		summarizeBy: none
+		sourceColumn: contr_benchmark
+
+	/// Confidence (%) that the true difference is more than 2.5 pp below benchmark.
+	column materially_below_bench
+		dataType: double
+		lineageTag: 791262db-e1a0-451b-ab6d-16d16213e09b
+		summarizeBy: none
+		sourceColumn: materially_below_bench
+
+	/// Confidence (%) that the true difference is within +/-2.5 pp of benchmark.
+	column inline_with_bench
+		dataType: double
+		lineageTag: e3f39aee-5799-430a-b318-a022269bce0a
+		summarizeBy: none
+		sourceColumn: inline_with_bench
+
+	/// Confidence (%) that the true difference is more than 2.5 pp above benchmark.
+	column materially_above_bench
+		dataType: double
+		lineageTag: e4b217cb-6d14-4a28-bacd-dda06ef41665
+		summarizeBy: none
+		sourceColumn: materially_above_bench
+
+	/// Lower 95% CI of difference, pp.
+	column difference_lowerci95
+		dataType: double
+		formatString: +0.0;-0.0;0.0
+		lineageTag: 0b6c4dca-5d87-4474-9272-3c5b0cd32b53
+		summarizeBy: none
+		sourceColumn: difference_lowerci95
+
+	/// Upper 95% CI of difference, pp.
+	column difference_upperci95
+		dataType: double
+		formatString: +0.0;-0.0;0.0
+		lineageTag: fb9fe7b5-0396-4875-8a83-4be6f8d5622d
+		summarizeBy: none
+		sourceColumn: difference_upperci95
+
+	/// Lower 95% CI of positivity, % 0-100.
+	column indicator_lowerci95
+		dataType: double
+		lineageTag: dd1b0c82-bd77-41ac-bb65-4f5be31ba7e4
+		summarizeBy: none
+		sourceColumn: indicator_lowerci95
+
+	/// Upper 95% CI of positivity, % 0-100.
+	column indicator_upperci95
+		dataType: double
+		lineageTag: 2a89965c-5873-4d06-ab4b-b1b0548bcb6e
+		summarizeBy: none
+		sourceColumn: indicator_upperci95
+
+	/// Published survey response headcount for the provider and mode (all questions).
+	column pub_response_headcount
+		dataType: double
+		lineageTag: 753f789b-1a75-4d77-957b-5aaf9e161ed3
+		summarizeBy: none
+		sourceColumn: pub_response_headcount
+
+	/// Published response rate for the provider and mode, % 0-100.
+	column pub_resprate
+		dataType: double
+		formatString: 0.0
+		lineageTag: ed3a1fc4-6fc8-4d13-8b2f-ac1c1093ecbc
+		summarizeBy: none
+		sourceColumn: pub_resprate
+
+	/// Materially above / below / Broadly in line with benchmark (90% confidence), as stored by clean.R.
+	column benchmark_category
+		dataType: string
+		lineageTag: a3ab246c-f627-42ca-a086-7e928537a777
+		summarizeBy: none
+		sourceColumn: benchmark_category
+
+	partition fact_provider = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "fact_provider.parquet")),
+				    NoHC = Table.SelectRows(Source, each not Text.StartsWith([question_no], "HC")),
+				    Typed = Table.TransformColumnTypes(NoHC, {
+				        {"ukprn", type text}, {"provider_name", type text}, {"mode_of_study", type text}, {"theme_no", Int64.Type}, {"question_no", type text},
+				        {"number_responses", type number}, {"number_population", type number},
+				        {"option1", type number}, {"option2", type number}, {"option3", type number}, {"option4", type number}, {"option5", type number}, {"not_applicable", type number},
+				        {"positivity_measure", type number}, {"standard_deviation", type number}, {"benchmark", type number}, {"difference", type number}, {"contr_benchmark", type number},
+				        {"materially_below_bench", type number}, {"inline_with_bench", type number}, {"materially_above_bench", type number},
+				        {"difference_lowerci95", type number}, {"difference_upperci95", type number}, {"indicator_lowerci95", type number}, {"indicator_upperci95", type number},
+				        {"pub_response_headcount", type number}, {"pub_resprate", type number}, {"benchmark_category", type text}})
+				in
+				    Typed
+

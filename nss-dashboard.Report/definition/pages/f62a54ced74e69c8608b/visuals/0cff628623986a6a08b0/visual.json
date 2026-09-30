@@ -1,0 +1,191 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "0cff628623986a6a08b0",
+  "position": {
+    "x": 825.066250974279,
+    "y": 107.74746687451285,
+    "z": 11001,
+    "height": 306.282151208106,
+    "width": 433.98285268901009,
+    "tabOrder": 11001
+  },
+  "visual": {
+    "visualType": "scatterChart",
+    "query": {
+      "queryState": {
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_teach"
+                    }
+                  },
+                  "Property": "benchmark_category"
+                }
+              },
+              "queryRef": "fact_teach.benchmark_category",
+              "nativeQueryRef": "benchmark_category"
+            }
+          ]
+        },
+        "Size": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "fact_teach"
+                        }
+                      },
+                      "Property": "number_responses"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "CountNonNull(fact_teach.number_responses)",
+              "nativeQueryRef": "Sum of number_responses"
+            }
+          ]
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_teach"
+                    }
+                  },
+                  "Property": "benchmark_pct"
+                }
+              },
+              "queryRef": "fact_teach.benchmark_pct",
+              "nativeQueryRef": "benchmark_pct",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_teach"
+                    }
+                  },
+                  "Property": "Positivity % (derived)"
+                }
+              },
+              "queryRef": "fact_teach.Positivity % (derived)",
+              "nativeQueryRef": "Positivity % (derived)"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "zoom": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "12ff61bb8334d625b09e",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_teach"
+              }
+            },
+            "Property": "Positivity % (derived)"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "a1391470ae39049cb71b",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_teach"
+                  }
+                },
+                "Property": "number_responses"
+              }
+            },
+            "Function": 0
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "2658520ec2ab0200a74c",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_teach"
+              }
+            },
+            "Property": "benchmark_pct"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "50a1630e12ca9eb1d534",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_teach"
+              }
+            },
+            "Property": "benchmark_category"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
+  }
+}

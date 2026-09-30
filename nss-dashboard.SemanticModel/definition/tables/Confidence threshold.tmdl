@@ -1,4 +1,4 @@
-/// What-if parameter: statistical confidence (%) required to call a result materially above or below benchmark (OfS materiality = more than 2.5 pp from benchmark). Default 90, matching the stored benchmark_category.
+/// What-if parameter: statistical confidence (%) required to call a result above or below benchmark (a difference of more than 2.5 pts from benchmark, the OfS threshold). Default 90, matching the stored benchmark_category.
 table 'Confidence threshold'
 	lineageTag: 4c770ab8-d54b-485f-b6c1-adde546f0977
 

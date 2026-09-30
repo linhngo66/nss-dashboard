@@ -1,221 +1,164 @@
-cah_code,cah_name,subject_level,parent_cah_code,cah1_code,cah2_code,cah1_name,cah2_name
-ALL,All subjects,All subjects,,,,,
-CAH01,Medicine and dentistry,CAH1,ALL,CAH01,,Medicine and dentistry,
-CAH01-01,Medicine and dentistry,CAH2,CAH01,CAH01,CAH01-01,Medicine and dentistry,Medicine and dentistry
-CAH01-01-01,Medical sciences (non-specific),CAH3,CAH01-01,CAH01,CAH01-01,Medicine and dentistry,Medicine and dentistry
-CAH01-01-02,Medicine (non-specific),CAH3,CAH01-01,CAH01,CAH01-01,Medicine and dentistry,Medicine and dentistry
-CAH01-01-03,Medicine by specialism,CAH3,CAH01-01,CAH01,CAH01-01,Medicine and dentistry,Medicine and dentistry
-CAH01-01-04,Dentistry,CAH3,CAH01-01,CAH01,CAH01-01,Medicine and dentistry,Medicine and dentistry
-CAH02,Subjects allied to medicine,CAH1,ALL,CAH02,,Subjects allied to medicine,
-CAH02-02,"Pharmacology, toxicology and pharmacy",CAH2,CAH02,CAH02,CAH02-02,Subjects allied to medicine,"Pharmacology, toxicology and pharmacy"
-CAH02-02-01,Pharmacology,CAH3,CAH02-02,CAH02,CAH02-02,Subjects allied to medicine,"Pharmacology, toxicology and pharmacy"
-CAH02-02-02,Toxicology,CAH3,CAH02-02,CAH02,CAH02-02,Subjects allied to medicine,"Pharmacology, toxicology and pharmacy"
-CAH02-02-03,Pharmacy,CAH3,CAH02-02,CAH02,CAH02-02,Subjects allied to medicine,"Pharmacology, toxicology and pharmacy"
-CAH02-04,Nursing and midwifery,CAH2,CAH02,CAH02,CAH02-04,Subjects allied to medicine,Nursing and midwifery
-CAH02-04-01,Nursing (non-specific),CAH3,CAH02-04,CAH02,CAH02-04,Subjects allied to medicine,Nursing and midwifery
-CAH02-04-02,Adult nursing,CAH3,CAH02-04,CAH02,CAH02-04,Subjects allied to medicine,Nursing and midwifery
-CAH02-04-04,Midwifery,CAH3,CAH02-04,CAH02,CAH02-04,Subjects allied to medicine,Nursing and midwifery
-CAH02-04-05,Children's nursing,CAH3,CAH02-04,CAH02,CAH02-04,Subjects allied to medicine,Nursing and midwifery
-CAH02-04-06,Dental nursing,CAH3,CAH02-04,CAH02,CAH02-04,Subjects allied to medicine,Nursing and midwifery
-CAH02-04-07,Mental health nursing,CAH3,CAH02-04,CAH02,CAH02-04,Subjects allied to medicine,Nursing and midwifery
-CAH02-04-08,Learning disabilities nursing,CAH3,CAH02-04,CAH02,CAH02-04,Subjects allied to medicine,Nursing and midwifery
-CAH02-04-09,Others in nursing,CAH3,CAH02-04,CAH02,CAH02-04,Subjects allied to medicine,Nursing and midwifery
-CAH02-05,Medical sciences,CAH2,CAH02,CAH02,CAH02-05,Subjects allied to medicine,Medical sciences
-CAH02-05-01,Medical technology,CAH3,CAH02-05,CAH02,CAH02-05,Subjects allied to medicine,Medical sciences
-CAH02-05-02,Healthcare science (non-specific),CAH3,CAH02-05,CAH02,CAH02-05,Subjects allied to medicine,Medical sciences
-CAH02-05-03,Biomedical sciences (non-specific),CAH3,CAH02-05,CAH02,CAH02-05,Subjects allied to medicine,Medical sciences
-CAH02-05-04,"Anatomy, physiology and pathology",CAH3,CAH02-05,CAH02,CAH02-05,Subjects allied to medicine,Medical sciences
-CAH02-06,Allied health,CAH2,CAH02,CAH02,CAH02-06,Subjects allied to medicine,Allied health
-CAH02-06-01,Health sciences (non-specific),CAH3,CAH02-06,CAH02,CAH02-06,Subjects allied to medicine,Allied health
-CAH02-06-02,Nutrition and dietetics,CAH3,CAH02-06,CAH02,CAH02-06,Subjects allied to medicine,Allied health
-CAH02-06-03,Ophthalmics,CAH3,CAH02-06,CAH02,CAH02-06,Subjects allied to medicine,Allied health
-CAH02-06-04,Environmental and public health,CAH3,CAH02-06,CAH02,CAH02-06,Subjects allied to medicine,Allied health
-CAH02-06-05,Physiotherapy,CAH3,CAH02-06,CAH02,CAH02-06,Subjects allied to medicine,Allied health
-CAH02-06-06,Complementary and alternative medicine,CAH3,CAH02-06,CAH02,CAH02-06,Subjects allied to medicine,Allied health
-CAH02-06-07,"Counselling, psychotherapy and occupational therapy",CAH3,CAH02-06,CAH02,CAH02-06,Subjects allied to medicine,Allied health
-CAH03,Biological and sport sciences,CAH1,ALL,CAH03,,Biological and sport sciences,
-CAH03-01,Biosciences,CAH2,CAH03,CAH03,CAH03-01,Biological and sport sciences,Biosciences
-CAH03-01-01,Biosciences (non-specific),CAH3,CAH03-01,CAH03,CAH03-01,Biological and sport sciences,Biosciences
-CAH03-01-02,Biology (non-specific),CAH3,CAH03-01,CAH03,CAH03-01,Biological and sport sciences,Biosciences
-CAH03-01-03,Ecology and environmental biology,CAH3,CAH03-01,CAH03,CAH03-01,Biological and sport sciences,Biosciences
-CAH03-01-04,Microbiology and cell science,CAH3,CAH03-01,CAH03,CAH03-01,Biological and sport sciences,Biosciences
-CAH03-01-05,Plant sciences,CAH3,CAH03-01,CAH03,CAH03-01,Biological and sport sciences,Biosciences
-CAH03-01-06,Zoology,CAH3,CAH03-01,CAH03,CAH03-01,Biological and sport sciences,Biosciences
-CAH03-01-07,Genetics,CAH3,CAH03-01,CAH03,CAH03-01,Biological and sport sciences,Biosciences
-CAH03-01-08,"Molecular biology, biophysics and biochemistry",CAH3,CAH03-01,CAH03,CAH03-01,Biological and sport sciences,Biosciences
-CAH03-01-09,Hair and beauty sciences,CAH3,CAH03-01,CAH03,CAH03-01,Biological and sport sciences,Biosciences
-CAH03-01-10,Others in biosciences,CAH3,CAH03-01,CAH03,CAH03-01,Biological and sport sciences,Biosciences
-CAH03-02,Sport and exercise sciences,CAH2,CAH03,CAH03,CAH03-02,Biological and sport sciences,Sport and exercise sciences
-CAH03-02-01,Sport and exercise sciences,CAH3,CAH03-02,CAH03,CAH03-02,Biological and sport sciences,Sport and exercise sciences
-CAH04,Psychology,CAH1,ALL,CAH04,,Psychology,
-CAH04-01,Psychology,CAH2,CAH04,CAH04,CAH04-01,Psychology,Psychology
-CAH04-01-01,Psychology (non-specific),CAH3,CAH04-01,CAH04,CAH04-01,Psychology,Psychology
-CAH04-01-02,Applied psychology,CAH3,CAH04-01,CAH04,CAH04-01,Psychology,Psychology
-CAH04-01-03,Developmental psychology,CAH3,CAH04-01,CAH04,CAH04-01,Psychology,Psychology
-CAH04-01-04,Psychology and health,CAH3,CAH04-01,CAH04,CAH04-01,Psychology,Psychology
-CAH04-01-05,Others in psychology,CAH3,CAH04-01,CAH04,CAH04-01,Psychology,Psychology
-CAH05,Veterinary sciences,CAH1,ALL,CAH05,,Veterinary sciences,
-CAH05-01,Veterinary sciences,CAH2,CAH05,CAH05,CAH05-01,Veterinary sciences,Veterinary sciences
-CAH05-01-01,Veterinary medicine and dentistry,CAH3,CAH05-01,CAH05,CAH05-01,Veterinary sciences,Veterinary sciences
-CAH05-01-02,Others in veterinary sciences,CAH3,CAH05-01,CAH05,CAH05-01,Veterinary sciences,Veterinary sciences
-CAH06,"Agriculture, food and related studies",CAH1,ALL,CAH06,,"Agriculture, food and related studies",
-CAH06-01,"Agriculture, food and related studies",CAH2,CAH06,CAH06,CAH06-01,"Agriculture, food and related studies","Agriculture, food and related studies"
-CAH06-01-01,Animal science,CAH3,CAH06-01,CAH06,CAH06-01,"Agriculture, food and related studies","Agriculture, food and related studies"
-CAH06-01-02,Agricultural sciences,CAH3,CAH06-01,CAH06,CAH06-01,"Agriculture, food and related studies","Agriculture, food and related studies"
-CAH06-01-03,Agriculture,CAH3,CAH06-01,CAH06,CAH06-01,"Agriculture, food and related studies","Agriculture, food and related studies"
-CAH06-01-04,Rural estate management,CAH3,CAH06-01,CAH06,CAH06-01,"Agriculture, food and related studies","Agriculture, food and related studies"
-CAH06-01-05,Forestry and arboriculture,CAH3,CAH06-01,CAH06,CAH06-01,"Agriculture, food and related studies","Agriculture, food and related studies"
-CAH06-01-06,Food and beverage studies (non-specific),CAH3,CAH06-01,CAH06,CAH06-01,"Agriculture, food and related studies","Agriculture, food and related studies"
-CAH06-01-07,Food sciences,CAH3,CAH06-01,CAH06,CAH06-01,"Agriculture, food and related studies","Agriculture, food and related studies"
-CAH06-01-08,Food and beverage production,CAH3,CAH06-01,CAH06,CAH06-01,"Agriculture, food and related studies","Agriculture, food and related studies"
-CAH07,Physical sciences,CAH1,ALL,CAH07,,Physical sciences,
-CAH07-01,Physics and astronomy,CAH2,CAH07,CAH07,CAH07-01,Physical sciences,Physics and astronomy
-CAH07-01-01,Physics,CAH3,CAH07-01,CAH07,CAH07-01,Physical sciences,Physics and astronomy
-CAH07-01-02,Astronomy,CAH3,CAH07-01,CAH07,CAH07-01,Physical sciences,Physics and astronomy
-CAH07-02,Chemistry,CAH2,CAH07,CAH07,CAH07-02,Physical sciences,Chemistry
-CAH07-02-01,Chemistry,CAH3,CAH07-02,CAH07,CAH07-02,Physical sciences,Chemistry
-CAH07-04,"General, applied and forensic sciences",CAH2,CAH07,CAH07,CAH07-04,Physical sciences,"General, applied and forensic sciences"
-CAH07-04-01,Physical sciences (non-specific),CAH3,CAH07-04,CAH07,CAH07-04,Physical sciences,"General, applied and forensic sciences"
-CAH07-04-02,Forensic and archaeological sciences,CAH3,CAH07-04,CAH07,CAH07-04,Physical sciences,"General, applied and forensic sciences"
-CAH07-04-03,Sciences (non-specific),CAH3,CAH07-04,CAH07,CAH07-04,Physical sciences,"General, applied and forensic sciences"
-CAH07-04-04,Natural sciences (non-specific),CAH3,CAH07-04,CAH07,CAH07-04,Physical sciences,"General, applied and forensic sciences"
-CAH09,Mathematical sciences,CAH1,ALL,CAH09,,Mathematical sciences,
-CAH09-01,Mathematical sciences,CAH2,CAH09,CAH09,CAH09-01,Mathematical sciences,Mathematical sciences
-CAH09-01-01,Mathematics,CAH3,CAH09-01,CAH09,CAH09-01,Mathematical sciences,Mathematical sciences
-CAH09-01-02,Operational research,CAH3,CAH09-01,CAH09,CAH09-01,Mathematical sciences,Mathematical sciences
-CAH09-01-03,Statistics,CAH3,CAH09-01,CAH09,CAH09-01,Mathematical sciences,Mathematical sciences
-CAH10,Engineering and technology,CAH1,ALL,CAH10,,Engineering and technology,
-CAH10-01,Engineering,CAH2,CAH10,CAH10,CAH10-01,Engineering and technology,Engineering
-CAH10-01-01,Engineering (non-specific),CAH3,CAH10-01,CAH10,CAH10-01,Engineering and technology,Engineering
-CAH10-01-02,Mechanical engineering,CAH3,CAH10-01,CAH10,CAH10-01,Engineering and technology,Engineering
-CAH10-01-03,Production and manufacturing engineering,CAH3,CAH10-01,CAH10,CAH10-01,Engineering and technology,Engineering
-CAH10-01-04,Aeronautical and aerospace engineering,CAH3,CAH10-01,CAH10,CAH10-01,Engineering and technology,Engineering
-CAH10-01-05,Naval architecture,CAH3,CAH10-01,CAH10,CAH10-01,Engineering and technology,Engineering
-CAH10-01-06,"Bioengineering, medical and biomedical engineering",CAH3,CAH10-01,CAH10,CAH10-01,Engineering and technology,Engineering
-CAH10-01-07,Civil engineering,CAH3,CAH10-01,CAH10,CAH10-01,Engineering and technology,Engineering
-CAH10-01-08,Electrical and electronic engineering,CAH3,CAH10-01,CAH10,CAH10-01,Engineering and technology,Engineering
-CAH10-01-09,"Chemical, process and energy engineering",CAH3,CAH10-01,CAH10,CAH10-01,Engineering and technology,Engineering
-CAH10-01-10,Others in engineering,CAH3,CAH10-01,CAH10,CAH10-01,Engineering and technology,Engineering
-CAH10-03,Materials and technology,CAH2,CAH10,CAH10,CAH10-03,Engineering and technology,Materials and technology
-CAH10-03-01,Minerals technology,CAH3,CAH10-03,CAH10,CAH10-03,Engineering and technology,Materials and technology
-CAH10-03-02,Materials technology,CAH3,CAH10-03,CAH10,CAH10-03,Engineering and technology,Materials and technology
-CAH10-03-03,Polymers and textiles,CAH3,CAH10-03,CAH10,CAH10-03,Engineering and technology,Materials and technology
-CAH10-03-04,Maritime technology,CAH3,CAH10-03,CAH10,CAH10-03,Engineering and technology,Materials and technology
-CAH10-03-05,Biotechnology,CAH3,CAH10-03,CAH10,CAH10-03,Engineering and technology,Materials and technology
-CAH10-03-06,Others in technology,CAH3,CAH10-03,CAH10,CAH10-03,Engineering and technology,Materials and technology
-CAH10-03-07,Materials science,CAH3,CAH10-03,CAH10,CAH10-03,Engineering and technology,Materials and technology
-CAH11,Computing,CAH1,ALL,CAH11,,Computing,
-CAH11-01,Computing,CAH2,CAH11,CAH11,CAH11-01,Computing,Computing
-CAH11-01-01,Computer science,CAH3,CAH11-01,CAH11,CAH11-01,Computing,Computing
-CAH11-01-02,Information technology,CAH3,CAH11-01,CAH11,CAH11-01,Computing,Computing
-CAH11-01-03,Information systems,CAH3,CAH11-01,CAH11,CAH11-01,Computing,Computing
-CAH11-01-04,Software engineering,CAH3,CAH11-01,CAH11,CAH11-01,Computing,Computing
-CAH11-01-05,Artificial intelligence,CAH3,CAH11-01,CAH11,CAH11-01,Computing,Computing
-CAH11-01-06,Computer games and animation,CAH3,CAH11-01,CAH11,CAH11-01,Computing,Computing
-CAH11-01-07,Business computing,CAH3,CAH11-01,CAH11,CAH11-01,Computing,Computing
-CAH11-01-08,Others in computing,CAH3,CAH11-01,CAH11,CAH11-01,Computing,Computing
-CAH13,"Architecture, building and planning",CAH1,ALL,CAH13,,"Architecture, building and planning",
-CAH13-01,"Architecture, building and planning",CAH2,CAH13,CAH13,CAH13-01,"Architecture, building and planning","Architecture, building and planning"
-CAH13-01-01,Architecture,CAH3,CAH13-01,CAH13,CAH13-01,"Architecture, building and planning","Architecture, building and planning"
-CAH13-01-02,Building,CAH3,CAH13-01,CAH13,CAH13-01,"Architecture, building and planning","Architecture, building and planning"
-CAH13-01-03,Landscape design,CAH3,CAH13-01,CAH13,CAH13-01,"Architecture, building and planning","Architecture, building and planning"
-CAH13-01-04,"Planning (urban, rural and regional)",CAH3,CAH13-01,CAH13,CAH13-01,"Architecture, building and planning","Architecture, building and planning"
-CAH15,Social sciences,CAH1,ALL,CAH15,,Social sciences,
-CAH15-01,"Sociology, social policy and anthropology",CAH2,CAH15,CAH15,CAH15-01,Social sciences,"Sociology, social policy and anthropology"
-CAH15-01-01,Social sciences (non-specific),CAH3,CAH15-01,CAH15,CAH15-01,Social sciences,"Sociology, social policy and anthropology"
-CAH15-01-02,Sociology,CAH3,CAH15-01,CAH15,CAH15-01,Social sciences,"Sociology, social policy and anthropology"
-CAH15-01-03,Social policy,CAH3,CAH15-01,CAH15,CAH15-01,Social sciences,"Sociology, social policy and anthropology"
-CAH15-01-04,Anthropology,CAH3,CAH15-01,CAH15,CAH15-01,Social sciences,"Sociology, social policy and anthropology"
-CAH15-01-05,Development studies,CAH3,CAH15-01,CAH15,CAH15-01,Social sciences,"Sociology, social policy and anthropology"
-CAH15-01-06,Cultural studies,CAH3,CAH15-01,CAH15,CAH15-01,Social sciences,"Sociology, social policy and anthropology"
-CAH15-02,Economics,CAH2,CAH15,CAH15,CAH15-02,Social sciences,Economics
-CAH15-02-01,Economics,CAH3,CAH15-02,CAH15,CAH15-02,Social sciences,Economics
-CAH15-03,Politics,CAH2,CAH15,CAH15,CAH15-03,Social sciences,Politics
-CAH15-03-01,Politics,CAH3,CAH15-03,CAH15,CAH15-03,Social sciences,Politics
-CAH15-04,Health and social care,CAH2,CAH15,CAH15,CAH15-04,Social sciences,Health and social care
-CAH15-04-01,Social work,CAH3,CAH15-04,CAH15,CAH15-04,Social sciences,Health and social care
-CAH15-04-02,Childhood and youth studies,CAH3,CAH15-04,CAH15,CAH15-04,Social sciences,Health and social care
-CAH15-04-03,Health studies,CAH3,CAH15-04,CAH15,CAH15-04,Social sciences,Health and social care
-CAH16,Law,CAH1,ALL,CAH16,,Law,
-CAH16-01,Law,CAH2,CAH16,CAH16,CAH16-01,Law,Law
-CAH16-01-01,Law,CAH3,CAH16-01,CAH16,CAH16-01,Law,Law
-CAH17,Business and management,CAH1,ALL,CAH17,,Business and management,
-CAH17-01,Business and management,CAH2,CAH17,CAH17,CAH17-01,Business and management,Business and management
-CAH17-01-01,Business and management (non-specific),CAH3,CAH17-01,CAH17,CAH17-01,Business and management,Business and management
-CAH17-01-02,Business studies,CAH3,CAH17-01,CAH17,CAH17-01,Business and management,Business and management
-CAH17-01-03,Marketing,CAH3,CAH17-01,CAH17,CAH17-01,Business and management,Business and management
-CAH17-01-04,Management studies,CAH3,CAH17-01,CAH17,CAH17-01,Business and management,Business and management
-CAH17-01-05,Human resource management,CAH3,CAH17-01,CAH17,CAH17-01,Business and management,Business and management
-CAH17-01-06,"Tourism, transport and travel",CAH3,CAH17-01,CAH17,CAH17-01,Business and management,Business and management
-CAH17-01-07,Finance,CAH3,CAH17-01,CAH17,CAH17-01,Business and management,Business and management
-CAH17-01-08,Accounting,CAH3,CAH17-01,CAH17,CAH17-01,Business and management,Business and management
-CAH17-01-09,Others in business and management,CAH3,CAH17-01,CAH17,CAH17-01,Business and management,Business and management
-CAH19,Language and area studies,CAH1,ALL,CAH19,,Language and area studies,
-CAH19-01,English studies,CAH2,CAH19,CAH19,CAH19-01,Language and area studies,English studies
-CAH19-01-01,English studies (non-specific),CAH3,CAH19-01,CAH19,CAH19-01,Language and area studies,English studies
-CAH19-01-02,English language,CAH3,CAH19-01,CAH19,CAH19-01,Language and area studies,English studies
-CAH19-01-03,Literature in English,CAH3,CAH19-01,CAH19,CAH19-01,Language and area studies,English studies
-CAH19-01-05,Creative writing,CAH3,CAH19-01,CAH19,CAH19-01,Language and area studies,English studies
-CAH19-01-06,Others in English studies,CAH3,CAH19-01,CAH19,CAH19-01,Language and area studies,English studies
-CAH19-01-07,Linguistics,CAH3,CAH19-01,CAH19,CAH19-01,Language and area studies,English studies
-CAH19-02,Celtic studies,CAH2,CAH19,CAH19,CAH19-02,Language and area studies,Celtic studies
-CAH19-02-01,Celtic studies (non-specific),CAH3,CAH19-02,CAH19,CAH19-02,Language and area studies,Celtic studies
-CAH19-02-03,Welsh studies,CAH3,CAH19-02,CAH19,CAH19-02,Language and area studies,Celtic studies
-CAH19-02-04,Others in Celtic studies,CAH3,CAH19-02,CAH19,CAH19-02,Language and area studies,Celtic studies
-CAH19-04,Languages and area studies,CAH2,CAH19,CAH19,CAH19-04,Language and area studies,Languages and area studies
-CAH19-04-01,French studies,CAH3,CAH19-04,CAH19,CAH19-04,Language and area studies,Languages and area studies
-CAH19-04-02,German and Scandinavian studies,CAH3,CAH19-04,CAH19,CAH19-04,Language and area studies,Languages and area studies
-CAH19-04-03,Italian studies,CAH3,CAH19-04,CAH19,CAH19-04,Language and area studies,Languages and area studies
-CAH19-04-04,Iberian studies,CAH3,CAH19-04,CAH19,CAH19-04,Language and area studies,Languages and area studies
-CAH19-04-05,Slavic studies,CAH3,CAH19-04,CAH19,CAH19-04,Language and area studies,Languages and area studies
-CAH19-04-06,Asian studies,CAH3,CAH19-04,CAH19,CAH19-04,Language and area studies,Languages and area studies
-CAH19-04-07,African and modern Middle Eastern studies,CAH3,CAH19-04,CAH19,CAH19-04,Language and area studies,Languages and area studies
-CAH19-04-08,American and Australasian studies,CAH3,CAH19-04,CAH19,CAH19-04,Language and area studies,Languages and area studies
-CAH19-04-09,Others in language and area studies,CAH3,CAH19-04,CAH19,CAH19-04,Language and area studies,Languages and area studies
-CAH20,"Historical, philosophical and religious studies",CAH1,ALL,CAH20,,"Historical, philosophical and religious studies",
-CAH20-01,History and archaeology,CAH2,CAH20,CAH20,CAH20-01,"Historical, philosophical and religious studies",History and archaeology
-CAH20-01-01,History,CAH3,CAH20-01,CAH20,CAH20-01,"Historical, philosophical and religious studies",History and archaeology
-CAH20-01-02,"History of art, architecture and design",CAH3,CAH20-01,CAH20,CAH20-01,"Historical, philosophical and religious studies",History and archaeology
-CAH20-01-03,Archaeology,CAH3,CAH20-01,CAH20,CAH20-01,"Historical, philosophical and religious studies",History and archaeology
-CAH20-01-04,Heritage studies,CAH3,CAH20-01,CAH20,CAH20-01,"Historical, philosophical and religious studies",History and archaeology
-CAH20-01-05,Classics,CAH3,CAH20-01,CAH20,CAH20-01,"Historical, philosophical and religious studies",History and archaeology
-CAH20-02,Philosophy and religious studies,CAH2,CAH20,CAH20,CAH20-02,"Historical, philosophical and religious studies",Philosophy and religious studies
-CAH20-02-01,Philosophy,CAH3,CAH20-02,CAH20,CAH20-02,"Historical, philosophical and religious studies",Philosophy and religious studies
-CAH20-02-02,Theology and religious studies,CAH3,CAH20-02,CAH20,CAH20-02,"Historical, philosophical and religious studies",Philosophy and religious studies
-CAH22,Education and teaching,CAH1,ALL,CAH22,,Education and teaching,
-CAH22-01,Education and teaching,CAH2,CAH22,CAH22,CAH22-01,Education and teaching,Education and teaching
-CAH22-01-01,Education,CAH3,CAH22-01,CAH22,CAH22-01,Education and teaching,Education and teaching
-CAH22-01-02,Teacher training,CAH3,CAH22-01,CAH22,CAH22-01,Education and teaching,Education and teaching
-CAH23,Combined and general studies,CAH1,ALL,CAH23,,Combined and general studies,
-CAH23-01,Combined and general studies,CAH2,CAH23,CAH23,CAH23-01,Combined and general studies,Combined and general studies
-CAH23-01-01,"Combined, general or negotiated studies",CAH3,CAH23-01,CAH23,CAH23-01,Combined and general studies,Combined and general studies
-CAH23-01-02,Personal development,CAH3,CAH23-01,CAH23,CAH23-01,Combined and general studies,Combined and general studies
-CAH23-01-03,Humanities (non-specific),CAH3,CAH23-01,CAH23,CAH23-01,Combined and general studies,Combined and general studies
-CAH23-01-04,Liberal arts (non-specific),CAH3,CAH23-01,CAH23,CAH23-01,Combined and general studies,Combined and general studies
-CAH24,"Media, journalism and communications",CAH1,ALL,CAH24,,"Media, journalism and communications",
-CAH24-01,"Media, journalism and communications",CAH2,CAH24,CAH24,CAH24-01,"Media, journalism and communications","Media, journalism and communications"
-CAH24-01-01,Information services,CAH3,CAH24-01,CAH24,CAH24-01,"Media, journalism and communications","Media, journalism and communications"
-CAH24-01-02,Publicity studies,CAH3,CAH24-01,CAH24,CAH24-01,"Media, journalism and communications","Media, journalism and communications"
-CAH24-01-03,Publishing,CAH3,CAH24-01,CAH24,CAH24-01,"Media, journalism and communications","Media, journalism and communications"
-CAH24-01-04,Journalism,CAH3,CAH24-01,CAH24,CAH24-01,"Media, journalism and communications","Media, journalism and communications"
-CAH24-01-05,Media studies,CAH3,CAH24-01,CAH24,CAH24-01,"Media, journalism and communications","Media, journalism and communications"
-CAH25,"Design, and creative and performing arts",CAH1,ALL,CAH25,,"Design, and creative and performing arts",
-CAH25-01,Creative arts and design,CAH2,CAH25,CAH25,CAH25-01,"Design, and creative and performing arts",Creative arts and design
-CAH25-01-01,Creative arts and design (non-specific),CAH3,CAH25-01,CAH25,CAH25-01,"Design, and creative and performing arts",Creative arts and design
-CAH25-01-02,Art,CAH3,CAH25-01,CAH25,CAH25-01,"Design, and creative and performing arts",Creative arts and design
-CAH25-01-03,Design studies,CAH3,CAH25-01,CAH25,CAH25-01,"Design, and creative and performing arts",Creative arts and design
-CAH25-01-04,Cinematics and photography,CAH3,CAH25-01,CAH25,CAH25-01,"Design, and creative and performing arts",Creative arts and design
-CAH25-01-05,Others in creative arts and design,CAH3,CAH25-01,CAH25,CAH25-01,"Design, and creative and performing arts",Creative arts and design
-CAH25-02,Performing arts,CAH2,CAH25,CAH25,CAH25-02,"Design, and creative and performing arts",Performing arts
-CAH25-02-01,Performing arts (non-specific),CAH3,CAH25-02,CAH25,CAH25-02,"Design, and creative and performing arts",Performing arts
-CAH25-02-02,Music,CAH3,CAH25-02,CAH25,CAH25-02,"Design, and creative and performing arts",Performing arts
-CAH25-02-03,Drama,CAH3,CAH25-02,CAH25,CAH25-02,"Design, and creative and performing arts",Performing arts
-CAH25-02-04,Dance,CAH3,CAH25-02,CAH25,CAH25-02,"Design, and creative and performing arts",Performing arts
-CAH26,"Geography, earth and environmental studies",CAH1,ALL,CAH26,,"Geography, earth and environmental studies",
-CAH26-01,"Geography, earth and environmental studies",CAH2,CAH26,CAH26,CAH26-01,"Geography, earth and environmental studies","Geography, earth and environmental studies"
-CAH26-01-01,Geography (non-specific),CAH3,CAH26-01,CAH26,CAH26-01,"Geography, earth and environmental studies","Geography, earth and environmental studies"
-CAH26-01-02,Physical geographical sciences,CAH3,CAH26-01,CAH26,CAH26-01,"Geography, earth and environmental studies","Geography, earth and environmental studies"
-CAH26-01-03,Human geography,CAH3,CAH26-01,CAH26,CAH26-01,"Geography, earth and environmental studies","Geography, earth and environmental studies"
-CAH26-01-04,Environmental sciences,CAH3,CAH26-01,CAH26,CAH26-01,"Geography, earth and environmental studies","Geography, earth and environmental studies"
-CAH26-01-05,Others in geographical studies,CAH3,CAH26-01,CAH26,CAH26-01,"Geography, earth and environmental studies","Geography, earth and environmental studies"
-CAH26-01-06,Earth sciences,CAH3,CAH26-01,CAH26,CAH26-01,"Geography, earth and environmental studies","Geography, earth and environmental studies"
+cah_code,cah_name,cah1_code,cah1_name,cah2_code,cah2_name
+CAH01-01-01,Medical sciences (non-specific),CAH01,Medicine and dentistry,CAH01-01,Medicine and dentistry
+CAH01-01-02,Medicine (non-specific),CAH01,Medicine and dentistry,CAH01-01,Medicine and dentistry
+CAH01-01-03,Medicine by specialism,CAH01,Medicine and dentistry,CAH01-01,Medicine and dentistry
+CAH01-01-04,Dentistry,CAH01,Medicine and dentistry,CAH01-01,Medicine and dentistry
+CAH02-02-01,Pharmacology,CAH02,Subjects allied to medicine,CAH02-02,"Pharmacology, toxicology and pharmacy"
+CAH02-02-02,Toxicology,CAH02,Subjects allied to medicine,CAH02-02,"Pharmacology, toxicology and pharmacy"
+CAH02-02-03,Pharmacy,CAH02,Subjects allied to medicine,CAH02-02,"Pharmacology, toxicology and pharmacy"
+CAH02-04-01,Nursing (non-specific),CAH02,Subjects allied to medicine,CAH02-04,Nursing and midwifery
+CAH02-04-02,Adult nursing,CAH02,Subjects allied to medicine,CAH02-04,Nursing and midwifery
+CAH02-04-04,Midwifery,CAH02,Subjects allied to medicine,CAH02-04,Nursing and midwifery
+CAH02-04-05,Children's nursing,CAH02,Subjects allied to medicine,CAH02-04,Nursing and midwifery
+CAH02-04-06,Dental nursing,CAH02,Subjects allied to medicine,CAH02-04,Nursing and midwifery
+CAH02-04-07,Mental health nursing,CAH02,Subjects allied to medicine,CAH02-04,Nursing and midwifery
+CAH02-04-08,Learning disabilities nursing,CAH02,Subjects allied to medicine,CAH02-04,Nursing and midwifery
+CAH02-04-09,Others in nursing,CAH02,Subjects allied to medicine,CAH02-04,Nursing and midwifery
+CAH02-05-01,Medical technology,CAH02,Subjects allied to medicine,CAH02-05,Medical sciences
+CAH02-05-02,Healthcare science (non-specific),CAH02,Subjects allied to medicine,CAH02-05,Medical sciences
+CAH02-05-03,Biomedical sciences (non-specific),CAH02,Subjects allied to medicine,CAH02-05,Medical sciences
+CAH02-05-04,"Anatomy, physiology and pathology",CAH02,Subjects allied to medicine,CAH02-05,Medical sciences
+CAH02-06-01,Health sciences (non-specific),CAH02,Subjects allied to medicine,CAH02-06,Allied health
+CAH02-06-02,Nutrition and dietetics,CAH02,Subjects allied to medicine,CAH02-06,Allied health
+CAH02-06-03,Ophthalmics,CAH02,Subjects allied to medicine,CAH02-06,Allied health
+CAH02-06-04,Environmental and public health,CAH02,Subjects allied to medicine,CAH02-06,Allied health
+CAH02-06-05,Physiotherapy,CAH02,Subjects allied to medicine,CAH02-06,Allied health
+CAH02-06-06,Complementary and alternative medicine,CAH02,Subjects allied to medicine,CAH02-06,Allied health
+CAH02-06-07,"Counselling, psychotherapy and occupational therapy",CAH02,Subjects allied to medicine,CAH02-06,Allied health
+CAH03-01-01,Biosciences (non-specific),CAH03,Biological and sport sciences,CAH03-01,Biosciences
+CAH03-01-02,Biology (non-specific),CAH03,Biological and sport sciences,CAH03-01,Biosciences
+CAH03-01-03,Ecology and environmental biology,CAH03,Biological and sport sciences,CAH03-01,Biosciences
+CAH03-01-04,Microbiology and cell science,CAH03,Biological and sport sciences,CAH03-01,Biosciences
+CAH03-01-05,Plant sciences,CAH03,Biological and sport sciences,CAH03-01,Biosciences
+CAH03-01-06,Zoology,CAH03,Biological and sport sciences,CAH03-01,Biosciences
+CAH03-01-07,Genetics,CAH03,Biological and sport sciences,CAH03-01,Biosciences
+CAH03-01-08,"Molecular biology, biophysics and biochemistry",CAH03,Biological and sport sciences,CAH03-01,Biosciences
+CAH03-01-09,Hair and beauty sciences,CAH03,Biological and sport sciences,CAH03-01,Biosciences
+CAH03-01-10,Others in biosciences,CAH03,Biological and sport sciences,CAH03-01,Biosciences
+CAH03-02-01,Sport and exercise sciences,CAH03,Biological and sport sciences,CAH03-02,Sport and exercise sciences
+CAH04-01-01,Psychology (non-specific),CAH04,Psychology,CAH04-01,Psychology
+CAH04-01-02,Applied psychology,CAH04,Psychology,CAH04-01,Psychology
+CAH04-01-03,Developmental psychology,CAH04,Psychology,CAH04-01,Psychology
+CAH04-01-04,Psychology and health,CAH04,Psychology,CAH04-01,Psychology
+CAH04-01-05,Others in psychology,CAH04,Psychology,CAH04-01,Psychology
+CAH05-01-01,Veterinary medicine and dentistry,CAH05,Veterinary sciences,CAH05-01,Veterinary sciences
+CAH05-01-02,Others in veterinary sciences,CAH05,Veterinary sciences,CAH05-01,Veterinary sciences
+CAH06-01-01,Animal science,CAH06,"Agriculture, food and related studies",CAH06-01,"Agriculture, food and related studies"
+CAH06-01-02,Agricultural sciences,CAH06,"Agriculture, food and related studies",CAH06-01,"Agriculture, food and related studies"
+CAH06-01-03,Agriculture,CAH06,"Agriculture, food and related studies",CAH06-01,"Agriculture, food and related studies"
+CAH06-01-04,Rural estate management,CAH06,"Agriculture, food and related studies",CAH06-01,"Agriculture, food and related studies"
+CAH06-01-05,Forestry and arboriculture,CAH06,"Agriculture, food and related studies",CAH06-01,"Agriculture, food and related studies"
+CAH06-01-06,Food and beverage studies (non-specific),CAH06,"Agriculture, food and related studies",CAH06-01,"Agriculture, food and related studies"
+CAH06-01-07,Food sciences,CAH06,"Agriculture, food and related studies",CAH06-01,"Agriculture, food and related studies"
+CAH06-01-08,Food and beverage production,CAH06,"Agriculture, food and related studies",CAH06-01,"Agriculture, food and related studies"
+CAH07-01-01,Physics,CAH07,Physical sciences,CAH07-01,Physics and astronomy
+CAH07-01-02,Astronomy,CAH07,Physical sciences,CAH07-01,Physics and astronomy
+CAH07-02-01,Chemistry,CAH07,Physical sciences,CAH07-02,Chemistry
+CAH07-04-01,Physical sciences (non-specific),CAH07,Physical sciences,CAH07-04,"General, applied and forensic sciences"
+CAH07-04-02,Forensic and archaeological sciences,CAH07,Physical sciences,CAH07-04,"General, applied and forensic sciences"
+CAH07-04-03,Sciences (non-specific),CAH07,Physical sciences,CAH07-04,"General, applied and forensic sciences"
+CAH07-04-04,Natural sciences (non-specific),CAH07,Physical sciences,CAH07-04,"General, applied and forensic sciences"
+CAH09-01-01,Mathematics,CAH09,Mathematical sciences,CAH09-01,Mathematical sciences
+CAH09-01-02,Operational research,CAH09,Mathematical sciences,CAH09-01,Mathematical sciences
+CAH09-01-03,Statistics,CAH09,Mathematical sciences,CAH09-01,Mathematical sciences
+CAH10-01-01,Engineering (non-specific),CAH10,Engineering and technology,CAH10-01,Engineering
+CAH10-01-02,Mechanical engineering,CAH10,Engineering and technology,CAH10-01,Engineering
+CAH10-01-03,Production and manufacturing engineering,CAH10,Engineering and technology,CAH10-01,Engineering
+CAH10-01-04,Aeronautical and aerospace engineering,CAH10,Engineering and technology,CAH10-01,Engineering
+CAH10-01-05,Naval architecture,CAH10,Engineering and technology,CAH10-01,Engineering
+CAH10-01-06,"Bioengineering, medical and biomedical engineering",CAH10,Engineering and technology,CAH10-01,Engineering
+CAH10-01-07,Civil engineering,CAH10,Engineering and technology,CAH10-01,Engineering
+CAH10-01-08,Electrical and electronic engineering,CAH10,Engineering and technology,CAH10-01,Engineering
+CAH10-01-09,"Chemical, process and energy engineering",CAH10,Engineering and technology,CAH10-01,Engineering
+CAH10-01-10,Others in engineering,CAH10,Engineering and technology,CAH10-01,Engineering
+CAH10-03-01,Minerals technology,CAH10,Engineering and technology,CAH10-03,Materials and technology
+CAH10-03-02,Materials technology,CAH10,Engineering and technology,CAH10-03,Materials and technology
+CAH10-03-03,Polymers and textiles,CAH10,Engineering and technology,CAH10-03,Materials and technology
+CAH10-03-04,Maritime technology,CAH10,Engineering and technology,CAH10-03,Materials and technology
+CAH10-03-05,Biotechnology,CAH10,Engineering and technology,CAH10-03,Materials and technology
+CAH10-03-06,Others in technology,CAH10,Engineering and technology,CAH10-03,Materials and technology
+CAH10-03-07,Materials science,CAH10,Engineering and technology,CAH10-03,Materials and technology
+CAH11-01-01,Computer science,CAH11,Computing,CAH11-01,Computing
+CAH11-01-02,Information technology,CAH11,Computing,CAH11-01,Computing
+CAH11-01-03,Information systems,CAH11,Computing,CAH11-01,Computing
+CAH11-01-04,Software engineering,CAH11,Computing,CAH11-01,Computing
+CAH11-01-05,Artificial intelligence,CAH11,Computing,CAH11-01,Computing
+CAH11-01-06,Computer games and animation,CAH11,Computing,CAH11-01,Computing
+CAH11-01-07,Business computing,CAH11,Computing,CAH11-01,Computing
+CAH11-01-08,Others in computing,CAH11,Computing,CAH11-01,Computing
+CAH13-01-01,Architecture,CAH13,"Architecture, building and planning",CAH13-01,"Architecture, building and planning"
+CAH13-01-02,Building,CAH13,"Architecture, building and planning",CAH13-01,"Architecture, building and planning"
+CAH13-01-03,Landscape design,CAH13,"Architecture, building and planning",CAH13-01,"Architecture, building and planning"
+CAH13-01-04,"Planning (urban, rural and regional)",CAH13,"Architecture, building and planning",CAH13-01,"Architecture, building and planning"
+CAH15-01-01,Social sciences (non-specific),CAH15,Social sciences,CAH15-01,"Sociology, social policy and anthropology"
+CAH15-01-02,Sociology,CAH15,Social sciences,CAH15-01,"Sociology, social policy and anthropology"
+CAH15-01-03,Social policy,CAH15,Social sciences,CAH15-01,"Sociology, social policy and anthropology"
+CAH15-01-04,Anthropology,CAH15,Social sciences,CAH15-01,"Sociology, social policy and anthropology"
+CAH15-01-05,Development studies,CAH15,Social sciences,CAH15-01,"Sociology, social policy and anthropology"
+CAH15-01-06,Cultural studies,CAH15,Social sciences,CAH15-01,"Sociology, social policy and anthropology"
+CAH15-02-01,Economics,CAH15,Social sciences,CAH15-02,Economics
+CAH15-03-01,Politics,CAH15,Social sciences,CAH15-03,Politics
+CAH15-04-01,Social work,CAH15,Social sciences,CAH15-04,Health and social care
+CAH15-04-02,Childhood and youth studies,CAH15,Social sciences,CAH15-04,Health and social care
+CAH15-04-03,Health studies,CAH15,Social sciences,CAH15-04,Health and social care
+CAH16-01-01,Law,CAH16,Law,CAH16-01,Law
+CAH17-01-01,Business and management (non-specific),CAH17,Business and management,CAH17-01,Business and management
+CAH17-01-02,Business studies,CAH17,Business and management,CAH17-01,Business and management
+CAH17-01-03,Marketing,CAH17,Business and management,CAH17-01,Business and management
+CAH17-01-04,Management studies,CAH17,Business and management,CAH17-01,Business and management
+CAH17-01-05,Human resource management,CAH17,Business and management,CAH17-01,Business and management
+CAH17-01-06,"Tourism, transport and travel",CAH17,Business and management,CAH17-01,Business and management
+CAH17-01-07,Finance,CAH17,Business and management,CAH17-01,Business and management
+CAH17-01-08,Accounting,CAH17,Business and management,CAH17-01,Business and management
+CAH17-01-09,Others in business and management,CAH17,Business and management,CAH17-01,Business and management
+CAH19-01-01,English studies (non-specific),CAH19,Language and area studies,CAH19-01,English studies
+CAH19-01-02,English language,CAH19,Language and area studies,CAH19-01,English studies
+CAH19-01-03,Literature in English,CAH19,Language and area studies,CAH19-01,English studies
+CAH19-01-05,Creative writing,CAH19,Language and area studies,CAH19-01,English studies
+CAH19-01-06,Others in English studies,CAH19,Language and area studies,CAH19-01,English studies
+CAH19-01-07,Linguistics,CAH19,Language and area studies,CAH19-01,English studies
+CAH19-02-01,Celtic studies (non-specific),CAH19,Language and area studies,CAH19-02,Celtic studies
+CAH19-02-03,Welsh studies,CAH19,Language and area studies,CAH19-02,Celtic studies
+CAH19-02-04,Others in Celtic studies,CAH19,Language and area studies,CAH19-02,Celtic studies
+CAH19-04-01,French studies,CAH19,Language and area studies,CAH19-04,Languages and area studies
+CAH19-04-02,German and Scandinavian studies,CAH19,Language and area studies,CAH19-04,Languages and area studies
+CAH19-04-03,Italian studies,CAH19,Language and area studies,CAH19-04,Languages and area studies
+CAH19-04-04,Iberian studies,CAH19,Language and area studies,CAH19-04,Languages and area studies
+CAH19-04-05,Slavic studies,CAH19,Language and area studies,CAH19-04,Languages and area studies
+CAH19-04-06,Asian studies,CAH19,Language and area studies,CAH19-04,Languages and area studies
+CAH19-04-07,African and modern Middle Eastern studies,CAH19,Language and area studies,CAH19-04,Languages and area studies
+CAH19-04-08,American and Australasian studies,CAH19,Language and area studies,CAH19-04,Languages and area studies
+CAH19-04-09,Others in language and area studies,CAH19,Language and area studies,CAH19-04,Languages and area studies
+CAH20-01-01,History,CAH20,"Historical, philosophical and religious studies",CAH20-01,History and archaeology
+CAH20-01-02,"History of art, architecture and design",CAH20,"Historical, philosophical and religious studies",CAH20-01,History and archaeology
+CAH20-01-03,Archaeology,CAH20,"Historical, philosophical and religious studies",CAH20-01,History and archaeology
+CAH20-01-04,Heritage studies,CAH20,"Historical, philosophical and religious studies",CAH20-01,History and archaeology
+CAH20-01-05,Classics,CAH20,"Historical, philosophical and religious studies",CAH20-01,History and archaeology
+CAH20-02-01,Philosophy,CAH20,"Historical, philosophical and religious studies",CAH20-02,Philosophy and religious studies
+CAH20-02-02,Theology and religious studies,CAH20,"Historical, philosophical and religious studies",CAH20-02,Philosophy and religious studies
+CAH22-01-01,Education,CAH22,Education and teaching,CAH22-01,Education and teaching
+CAH22-01-02,Teacher training,CAH22,Education and teaching,CAH22-01,Education and teaching
+CAH23-01-01,"Combined, general or negotiated studies",CAH23,Combined and general studies,CAH23-01,Combined and general studies
+CAH23-01-02,Personal development,CAH23,Combined and general studies,CAH23-01,Combined and general studies
+CAH23-01-03,Humanities (non-specific),CAH23,Combined and general studies,CAH23-01,Combined and general studies
+CAH23-01-04,Liberal arts (non-specific),CAH23,Combined and general studies,CAH23-01,Combined and general studies
+CAH24-01-01,Information services,CAH24,"Media, journalism and communications",CAH24-01,"Media, journalism and communications"
+CAH24-01-02,Publicity studies,CAH24,"Media, journalism and communications",CAH24-01,"Media, journalism and communications"
+CAH24-01-03,Publishing,CAH24,"Media, journalism and communications",CAH24-01,"Media, journalism and communications"
+CAH24-01-04,Journalism,CAH24,"Media, journalism and communications",CAH24-01,"Media, journalism and communications"
+CAH24-01-05,Media studies,CAH24,"Media, journalism and communications",CAH24-01,"Media, journalism and communications"
+CAH25-01-01,Creative arts and design (non-specific),CAH25,"Design, and creative and performing arts",CAH25-01,Creative arts and design
+CAH25-01-02,Art,CAH25,"Design, and creative and performing arts",CAH25-01,Creative arts and design
+CAH25-01-03,Design studies,CAH25,"Design, and creative and performing arts",CAH25-01,Creative arts and design
+CAH25-01-04,Cinematics and photography,CAH25,"Design, and creative and performing arts",CAH25-01,Creative arts and design
+CAH25-01-05,Others in creative arts and design,CAH25,"Design, and creative and performing arts",CAH25-01,Creative arts and design
+CAH25-02-01,Performing arts (non-specific),CAH25,"Design, and creative and performing arts",CAH25-02,Performing arts
+CAH25-02-02,Music,CAH25,"Design, and creative and performing arts",CAH25-02,Performing arts
+CAH25-02-03,Drama,CAH25,"Design, and creative and performing arts",CAH25-02,Performing arts
+CAH25-02-04,Dance,CAH25,"Design, and creative and performing arts",CAH25-02,Performing arts
+CAH26-01-01,Geography (non-specific),CAH26,"Geography, earth and environmental studies",CAH26-01,"Geography, earth and environmental studies"
+CAH26-01-02,Physical geographical sciences,CAH26,"Geography, earth and environmental studies",CAH26-01,"Geography, earth and environmental studies"
+CAH26-01-03,Human geography,CAH26,"Geography, earth and environmental studies",CAH26-01,"Geography, earth and environmental studies"
+CAH26-01-04,Environmental sciences,CAH26,"Geography, earth and environmental studies",CAH26-01,"Geography, earth and environmental studies"
+CAH26-01-05,Others in geographical studies,CAH26,"Geography, earth and environmental studies",CAH26-01,"Geography, earth and environmental studies"
+CAH26-01-06,Earth sciences,CAH26,"Geography, earth and environmental studies",CAH26-01,"Geography, earth and environmental studies"

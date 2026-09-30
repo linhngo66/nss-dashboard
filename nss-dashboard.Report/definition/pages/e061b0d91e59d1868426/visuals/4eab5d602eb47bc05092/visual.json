@@ -1,0 +1,80 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "4eab5d602eb47bc05092",
+  "position": {
+    "x": 735.27669524551823,
+    "y": 327.23304754481683,
+    "z": 11001,
+    "height": 65.845674201091185,
+    "width": 323.24240062353857,
+    "tabOrder": 11001
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "fact_provider"
+                        }
+                      },
+                      "Property": "pub_response_headcount"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "CountNonNull(fact_provider.pub_response_headcount)",
+              "nativeQueryRef": "Sum of pub_response_headcount"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_provider"
+                    }
+                  },
+                  "Property": "Provider response rate %"
+                }
+              },
+              "queryRef": "fact_provider.Provider response rate %",
+              "nativeQueryRef": "Provider response rate %"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Aggregation": {
+                "Expression": {
+                  "Column": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "fact_provider"
+                      }
+                    },
+                    "Property": "pub_response_headcount"
+                  }
+                },
+                "Function": 0
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
