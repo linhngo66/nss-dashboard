@@ -47,8 +47,7 @@
                 }
               },
               "queryRef": "fact_teach.benchmark_category",
-              "nativeQueryRef": "benchmark_category",
-              "displayName": "Benchmark comparison"
+              "nativeQueryRef": "benchmark_category"
             }
           ]
         },
@@ -64,36 +63,17 @@
                           "Entity": "fact_teach"
                         }
                       },
-                      "Property": "question_no"
+                      "Property": "benchmark_category"
                     }
                   },
-                  "Function": 2
+                  "Function": 5
                 }
               },
-              "queryRef": "Count(fact_teach.question_no)",
-              "nativeQueryRef": "Count of question_no",
-              "displayName": "Results"
+              "queryRef": "CountNonNull(fact_teach.benchmark_category)",
+              "nativeQueryRef": "Count of benchmark_category"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "dim_level"
-                  }
-                },
-                "Property": "level_of_study"
-              }
-            },
-            "direction": "Ascending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
@@ -315,10 +295,49 @@
                 }
               }
             },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI Semibold'''"
+                }
+              }
+            },
             "fontSize": {
               "expr": {
                 "Literal": {
                   "Value": "10D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#000000'"
+                    }
+                  }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'left'"
+                }
+              }
+            },
+            "titleWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
@@ -342,10 +361,42 @@
                 }
               }
             },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI'''"
+                }
+              }
+            },
             "fontSize": {
               "expr": {
                 "Literal": {
                   "Value": "8D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#8C8C8C'"
+                    }
+                  }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'left'"
+                }
+              }
+            },
+            "titleWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             }
@@ -401,7 +452,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#D9D9D9'"
+                      "Value": "'#EBEBEB'"
                     }
                   }
                 }
@@ -417,7 +468,7 @@
             "radius": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "6D"
                 }
               }
             }
@@ -441,20 +492,6 @@
   },
   "filterConfig": {
     "filters": [
-      {
-        "name": "d44057c045625612d343",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_level"
-              }
-            },
-            "Property": "level_of_study"
-          }
-        },
-        "type": "Categorical"
-      },
       {
         "name": "b8de4fa4b78c6e1b1544",
         "field": {
@@ -527,25 +564,6 @@
             }
           ]
         }
-      },
-      {
-        "name": "1cbdd4100e80a73ae452",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "fact_teach"
-                  }
-                },
-                "Property": "question_no"
-              }
-            },
-            "Function": 2
-          }
-        },
-        "type": "Advanced"
       }
     ]
   }

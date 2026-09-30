@@ -4,10 +4,10 @@
   "position": {
     "x": 852,
     "y": 180,
-    "z": 12000,
+    "z": 17000,
     "height": 262,
     "width": 412,
-    "tabOrder": 12000
+    "tabOrder": 17000
   },
   "visual": {
     "visualType": "clusteredBarChart",
@@ -42,7 +42,7 @@
                     "Column": {
                       "Expression": {
                         "SourceRef": {
-                          "Entity": "fact_provider"
+                          "Entity": "fact_teach"
                         }
                       },
                       "Property": "pub_resprate"
@@ -51,30 +51,11 @@
                   "Function": 1
                 }
               },
-              "queryRef": "Avg(fact_provider.pub_resprate)",
-              "nativeQueryRef": "Average of pub_resprate",
-              "displayName": "Average response rate (%)"
+              "queryRef": "CountNonNull(fact_teach.pub_resprate)",
+              "nativeQueryRef": "Average of pub_resprate"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "dim_mode"
-                  }
-                },
-                "Property": "mode_of_study"
-              }
-            },
-            "direction": "Ascending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
@@ -194,10 +175,49 @@
                 }
               }
             },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI Semibold'''"
+                }
+              }
+            },
             "fontSize": {
               "expr": {
                 "Literal": {
                   "Value": "10D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#000000'"
+                    }
+                  }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'left'"
+                }
+              }
+            },
+            "titleWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
@@ -217,7 +237,14 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Average published response rate (%) · provider totals'"
+                  "Value": "'Average published response rate (%)'"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI'''"
                 }
               }
             },
@@ -225,6 +252,31 @@
               "expr": {
                 "Literal": {
                   "Value": "8D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#8C8C8C'"
+                    }
+                  }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'left'"
+                }
+              }
+            },
+            "titleWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             }
@@ -293,7 +345,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#D9D9D9'"
+                      "Value": "'#EBEBEB'"
                     }
                   }
                 }
@@ -309,7 +361,7 @@
             "radius": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "6D"
                 }
               }
             }

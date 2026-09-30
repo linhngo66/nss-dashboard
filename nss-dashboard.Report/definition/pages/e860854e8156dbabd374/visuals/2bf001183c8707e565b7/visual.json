@@ -4,10 +4,10 @@
   "position": {
     "x": 16,
     "y": 108,
-    "z": 9000,
+    "z": 14000,
     "height": 64,
     "width": 1248,
-    "tabOrder": 9000
+    "tabOrder": 14000
   },
   "visual": {
     "visualType": "cardVisual",
@@ -23,11 +23,11 @@
                       "Entity": "fact_teach"
                     }
                   },
-                  "Property": "Positivity % (derived)"
+                  "Property": "Positivity %"
                 }
               },
               "queryRef": "fact_teach.Positivity % (derived)",
-              "nativeQueryRef": "Positivity % (derived)"
+              "nativeQueryRef": "Positivity %"
             },
             {
               "field": {
@@ -76,43 +76,31 @@
             },
             {
               "field": {
-                "Aggregation": {
+                "Measure": {
                   "Expression": {
-                    "Column": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "fact_provider"
-                        }
-                      },
-                      "Property": "pub_response_headcount"
+                    "SourceRef": {
+                      "Entity": "fact_teach"
                     }
                   },
-                  "Function": 0
+                  "Property": "Response headcount"
                 }
               },
-              "queryRef": "CountNonNull(fact_provider.pub_response_headcount)",
-              "nativeQueryRef": "Number of students responses",
-              "displayName": "Number of students responses"
+              "queryRef": "fact_teach.Response headcount",
+              "nativeQueryRef": "Response headcount"
             },
             {
               "field": {
-                "Aggregation": {
+                "Measure": {
                   "Expression": {
-                    "Column": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "fact_provider"
-                        }
-                      },
-                      "Property": "pub_resprate"
+                    "SourceRef": {
+                      "Entity": "fact_teach"
                     }
                   },
-                  "Function": 1
+                  "Property": "Response rate %"
                 }
               },
-              "queryRef": "Avg(fact_provider.pub_resprate)",
-              "nativeQueryRef": "Average of pub_resprate",
-              "displayName": "Average response rate (%)"
+              "queryRef": "fact_teach.Response rate %",
+              "nativeQueryRef": "Response rate %"
             }
           ]
         }
@@ -127,7 +115,7 @@
                     "Entity": "fact_teach"
                   }
                 },
-                "Property": "Positivity % (derived)"
+                "Property": "Positivity %"
               }
             },
             "direction": "Descending"
@@ -259,6 +247,22 @@
             "id": "default"
           }
         }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "default"
+          }
+        }
       ]
     },
     "visualContainerObjects": {
@@ -360,7 +364,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#D9D9D9'"
+                      "Value": "'#EBEBEB'"
                     }
                   }
                 }
@@ -376,7 +380,7 @@
             "radius": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "6D"
                 }
               }
             }

@@ -4,9 +4,9 @@
   "position": {
     "x": 16,
     "y": 108,
-    "width": 1248,
-    "height": 64,
     "z": 13000,
+    "height": 64,
+    "width": 1248,
     "tabOrder": 13000
   },
   "visual": {
@@ -15,26 +15,6 @@
       "queryState": {
         "Data": {
           "projections": [
-            {
-              "field": {
-                "Aggregation": {
-                  "Expression": {
-                    "Column": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "dim_theme_question"
-                        }
-                      },
-                      "Property": "question_short"
-                    }
-                  },
-                  "Function": 3
-                }
-              },
-              "queryRef": "Min(dim_theme_question.question_short)",
-              "nativeQueryRef": "First question_short",
-              "displayName": "Question"
-            },
             {
               "field": {
                 "Aggregation": {
@@ -97,43 +77,31 @@
             },
             {
               "field": {
-                "Aggregation": {
+                "Measure": {
                   "Expression": {
-                    "Column": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "fact_teach"
-                        }
-                      },
-                      "Property": "pub_resprate"
+                    "SourceRef": {
+                      "Entity": "fact_teach"
                     }
                   },
-                  "Function": 1
+                  "Property": "Response rate %"
                 }
               },
-              "queryRef": "Avg(fact_teach.pub_resprate)",
-              "nativeQueryRef": "Average of pub_resprate",
-              "displayName": "Average response rate (%)"
+              "queryRef": "fact_teach.Response rate %",
+              "nativeQueryRef": "Response rate %"
             },
             {
               "field": {
-                "Aggregation": {
+                "Measure": {
                   "Expression": {
-                    "Column": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "fact_teach"
-                        }
-                      },
-                      "Property": "question_no"
+                    "SourceRef": {
+                      "Entity": "fact_teach"
                     }
                   },
-                  "Function": 2
+                  "Property": "Response headcount"
                 }
               },
-              "queryRef": "Count(fact_teach.question_no)",
-              "nativeQueryRef": "Count of question_no",
-              "displayName": "Published results"
+              "queryRef": "fact_teach.Response headcount",
+              "nativeQueryRef": "Response headcount"
             }
           ]
         }
@@ -350,7 +318,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#D9D9D9'"
+                      "Value": "'#EBEBEB'"
                     }
                   }
                 }
@@ -366,7 +334,7 @@
             "radius": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "6D"
                 }
               }
             }

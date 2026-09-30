@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
   "name": "fbe8815c82019b168e2d",
   "position": {
-    "x": 16,
-    "y": 10,
+    "x": 15.828524319868096,
+    "y": 9.4971145919208571,
     "z": 1000,
-    "height": 30,
-    "width": 300,
+    "height": 30.601813685078319,
+    "width": 417.87304204451772,
     "tabOrder": 1000
   },
   "visual": {
@@ -19,15 +19,14 @@
               {
                 "textRuns": [
                   {
-                    "value": "Overview",
+                    "value": "Overview - NSS Student Survey",
                     "textStyle": {
                       "fontFamily": "Segoe UI Semibold",
                       "fontSize": "16pt",
-                      "color": "#FFFFFF"
+                      "color": "#ffffff"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               }
             ]
           }

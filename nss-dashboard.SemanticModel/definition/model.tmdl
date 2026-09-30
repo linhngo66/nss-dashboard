@@ -20,7 +20,6 @@ ref table dim_cah
 ref table dim_theme_question
 ref table fact_teach
 ref table 'Confidence threshold'
-ref table 'Reliability threshold'
 ref table fact_provider
 
 ref cultureInfo en-US

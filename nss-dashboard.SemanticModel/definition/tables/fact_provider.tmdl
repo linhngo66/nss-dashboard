@@ -2,41 +2,11 @@
 table fact_provider
 	lineageTag: 88d9dbff-a494-4609-85f4-84beb8d24d99
 
-	/// Published provider-level benchmark. Single row only (one provider, mode and question).
-	measure 'Provider benchmark %' = IF ( COUNTROWS ( fact_provider ) = 1, MAX ( fact_provider[benchmark] ) / 100 )
+	/// Average published provider-level benchmark over the rows in context (simple average of fact_provider[benchmark]), as a fraction to match percentage axes.
+	measure 'Provider benchmark %' = DIVIDE ( AVERAGE ( fact_provider[benchmark] ), 100 )
 		formatString: 0.0%
 		displayFolder: Provider
 		lineageTag: fd37ecaf-553a-4c42-ab10-546235a448ca
-
-	/// Published provider-level positivity minus benchmark, in percentage points. Single row only (one provider, mode and question).
-	measure 'Provider difference (pts)' = IF ( COUNTROWS ( fact_provider ) = 1, MAX ( fact_provider[difference] ) )
-		formatString: +0.0;-0.0;0.0
-		displayFolder: Provider
-		lineageTag: ab69f0dc-2f84-42b3-9396-1c1a793d6792
-
-	/// Lower bound of the published 95% confidence interval for the provider-level difference. Single row only.
-	measure 'Provider difference lower CI 95 (pts)' = IF ( COUNTROWS ( fact_provider ) = 1, MAX ( fact_provider[difference_lowerci95] ) )
-		formatString: +0.0;-0.0;0.0
-		displayFolder: Provider
-		lineageTag: 044b8407-0f11-48df-8ef4-ee46465660e9
-
-	/// Upper bound of the published 95% confidence interval for the provider-level difference. Single row only.
-	measure 'Provider difference upper CI 95 (pts)' = IF ( COUNTROWS ( fact_provider ) = 1, MAX ( fact_provider[difference_upperci95] ) )
-		formatString: +0.0;-0.0;0.0
-		displayFolder: Provider
-		lineageTag: 131b2d15-cee7-4835-b623-2fb19d761856
-
-	/// DERIVED, NOT PUBLISHED. Positivity pooled from the provider-level option counts over the rows in context: (option1 + option2) / (option1..option5). Pooling across providers and modes is valid because provider totals do not overlap.
-	measure 'Provider positivity % (derived)' =
-			VAR _positive = SUM ( fact_provider[option1] ) + SUM ( fact_provider[option2] )
-			VAR _answered =
-			    SUM ( fact_provider[option1] ) + SUM ( fact_provider[option2] ) + SUM ( fact_provider[option3] )
-			        + SUM ( fact_provider[option4] )
-			RETURN
-			    DIVIDE ( _positive, _answered )
-		formatString: 0.0%
-		displayFolder: Provider
-		lineageTag: a8f88da6-d191-438b-9ef1-da1c9f18276a
 
 	/// Survey response rate. For one provider and mode it equals the published pub_resprate. For several it is pooled (derived): total response headcount / total survey population, where each provider x mode's survey population in whole students is headcount / published rate.
 	measure 'Provider response rate %' =
@@ -89,109 +59,6 @@ table fact_provider
 		formatString: 0.0%
 		displayFolder: Provider
 		lineageTag: 1c064a79-aea5-45e6-a398-3b56e19d4972
-
-	/// Above / Below / In line with benchmark for one provider-level result, using the selected Confidence threshold (default 90): above or below means a difference of more than 2.5 pts with at least that much confidence. Single row only.
-	measure 'Provider benchmark category' =
-			VAR _t = [Confidence threshold Value]
-			RETURN
-			    IF (
-			        COUNTROWS ( fact_provider ) = 1,
-			        VAR _above = MAX ( fact_provider[materially_above_bench] )
-			        VAR _below = MAX ( fact_provider[materially_below_bench] )
-			        RETURN
-			            SWITCH (
-			                TRUE (),
-			                ISBLANK ( _above ), "Not assessed",
-			                _above >= _t, "Above benchmark",
-			                _below >= _t, "Below benchmark",
-			                "In line with benchmark"
-			            )
-			    )
-		displayFolder: Provider
-		lineageTag: a8964572-e019-4dd0-8c9f-a33a9efdf891
-
-	/// Hex colour for the provider-level Benchmark category (colour-blind safe): above #1F4E79, below #C45A12, in line #A6A6A6, not assessed #D9D9D9. Faded (hex alpha 59) when the result rests on fewer responses than the Reliability threshold or the provider is more than half its own benchmark population.
-	measure 'Provider benchmark category colour' =
-			VAR _colour =
-			    SWITCH (
-			        [Provider benchmark category],
-			        "Above benchmark", "#1F4E79",
-			        "Below benchmark", "#C45A12",
-			        "In line with benchmark", "#A6A6A6",
-			        "Not assessed", "#D9D9D9"
-			    )
-			VAR _lowReliability =
-			    MAX ( fact_provider[number_responses] ) < [Reliability threshold Value]
-			        || MAX ( fact_provider[contr_benchmark] ) > 50
-			RETURN
-			    IF ( NOT ISBLANK ( _colour ), _colour & IF ( _lowReliability, "59", "" ) )
-		displayFolder: Provider
-		lineageTag: c8c4af48-d41a-443b-8852-8894954bafce
-
-	/// Non-colour cue for the provider-level Benchmark category: ▲ above, ▼ below, ● in line, ○ not assessed.
-	measure 'Provider benchmark category marker' =
-			SWITCH (
-			    [Provider benchmark category],
-			    "Above benchmark", "▲",
-			    "Below benchmark", "▼",
-			    "In line with benchmark", "●",
-			    "Not assessed", "○"
-			)
-		displayFolder: Provider
-		lineageTag: 12c8818a-eee4-4903-add0-eca36ae5dcc2
-
-	/// Share of respondents choosing the most positive option on the 4-option questions, pooled from provider-level option counts in context. Q28 (5-point scale) is excluded.
-	measure 'Provider option 1 share %' =
-			VAR _o1 = CALCULATE ( SUM ( fact_provider[option1] ), KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" ) )
-			VAR _answered =
-			    CALCULATE (
-			        SUM ( fact_provider[option1] ) + SUM ( fact_provider[option2] ) + SUM ( fact_provider[option3] ) + SUM ( fact_provider[option4] ),
-			        KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" )
-			    )
-			RETURN
-			    DIVIDE ( _o1, _answered )
-		formatString: 0.0%
-		displayFolder: Provider
-		lineageTag: fb7380ae-7685-4c05-b059-23d884ea1cb8
-
-	/// Share of respondents choosing the second option on the 4-option questions, pooled from provider-level option counts. Q28 excluded.
-	measure 'Provider option 2 share %' =
-			VAR _o2 = CALCULATE ( SUM ( fact_provider[option2] ), KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" ) )
-			VAR _answered =
-			    CALCULATE (
-			        SUM ( fact_provider[option1] ) + SUM ( fact_provider[option2] ) + SUM ( fact_provider[option3] ) + SUM ( fact_provider[option4] ),
-			        KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" )
-			    )
-			RETURN
-			    DIVIDE ( _o2, _answered )
-		formatString: 0.0%
-		displayFolder: Provider
-		lineageTag: 80d94893-661a-47e2-bd7a-79ea8bb3642e
-
-	/// Share of respondents choosing a negative option (option3 + option4) on the 4-option questions, pooled from provider-level option counts. Q28 excluded.
-	measure 'Provider negative share %' =
-			VAR _negative =
-			    CALCULATE ( SUM ( fact_provider[option3] ) + SUM ( fact_provider[option4] ), KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" ) )
-			VAR _answered =
-			    CALCULATE (
-			        SUM ( fact_provider[option1] ) + SUM ( fact_provider[option2] ) + SUM ( fact_provider[option3] ) + SUM ( fact_provider[option4] ),
-			        KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" )
-			    )
-			RETURN
-			    DIVIDE ( _negative, _answered )
-		formatString: 0.0%
-		displayFolder: Provider
-		lineageTag: a6c2e94b-75ba-45a4-bcbc-954c73d07c73
-
-	/// Dynamic title for the provider difference-by-question chart: asks the user to select one provider and one mode when the published values cannot be shown.
-	measure 'Provider difference chart title' =
-			IF (
-			    HASONEVALUE ( dim_provider[ukprn] ) && HASONEVALUE ( dim_mode[mode_of_study] ),
-			    "Difference from benchmark by question",
-			    "Difference from benchmark by question: select one provider and one mode"
-			)
-		displayFolder: Provider
-		lineageTag: 42e09fc7-ec2c-4312-a342-ca0763076334
 
 	/// UK Provider Reference Number. FK to dim_provider.
 	column ukprn

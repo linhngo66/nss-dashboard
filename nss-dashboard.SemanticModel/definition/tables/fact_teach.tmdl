@@ -2,38 +2,8 @@
 table fact_teach
 	lineageTag: 365d84be-9296-4382-a150-c6deb4b7653f
 
-	/// Published standard deviation of the positivity measure, in percentage points. Single fact row only; blank otherwise.
-	measure 'Standard deviation' = IF ( COUNTROWS ( fact_teach ) = 1, MAX ( fact_teach[standard_deviation] ) )
-		formatString: 0.0
-		displayFolder: Core
-		lineageTag: 5b668f6e-ea06-49a7-93c5-a1aedad8e4a0
-
-	/// Lower bound of the published 95% confidence interval for positivity. Single fact row only; blank otherwise.
-	measure 'Positivity lower CI 95 %' = IF ( COUNTROWS ( fact_teach ) = 1, MAX ( fact_teach[indicator_lowerci95] ) / 100 )
-		formatString: 0.0%
-		displayFolder: Core
-		lineageTag: f9fe7c57-59b1-418b-82ac-58280077b626
-
-	/// Upper bound of the published 95% confidence interval for positivity. Single fact row only; blank otherwise.
-	measure 'Positivity upper CI 95 %' = IF ( COUNTROWS ( fact_teach ) = 1, MAX ( fact_teach[indicator_upperci95] ) / 100 )
-		formatString: 0.0%
-		displayFolder: Core
-		lineageTag: e64862e3-62d0-471c-95a7-3beaca5a91ec
-
-	/// Lower bound of the published 95% confidence interval for the difference from benchmark, in percentage points. Single fact row only; blank where not assessed.
-	measure 'Difference lower CI 95 (pts)' = IF ( COUNTROWS ( fact_teach ) = 1, MAX ( fact_teach[difference_lowerci95] ) )
-		formatString: +0.0;-0.0;0.0
-		displayFolder: Core
-		lineageTag: b15b6a4d-cbdb-4f81-a34c-bfadf45d504a
-
-	/// Upper bound of the published 95% confidence interval for the difference from benchmark, in percentage points. Single fact row only; blank where not assessed.
-	measure 'Difference upper CI 95 (pts)' = IF ( COUNTROWS ( fact_teach ) = 1, MAX ( fact_teach[difference_upperci95] ) )
-		formatString: +0.0;-0.0;0.0
-		displayFolder: Core
-		lineageTag: 3eac9d73-d08b-46d8-91ea-07dd8e4b6b18
-
 	/// DERIVED, NOT PUBLISHED. Positivity pooled from option counts across all rows in context: (option1 + option2) / (option1..option5); option5 is only used by Q28. Rows are disjoint CAH3 x level x mode x provider groups, so pooling across providers, modes, levels and subjects is valid. Matches the published figure within 0.1 pp on about 95% of single rows (mismatches are rows with fractional option counts).
-	measure 'Positivity % (derived)' =
+	measure 'Positivity %' =
 			VAR _positive = SUM ( fact_teach[option1] ) + SUM ( fact_teach[option2] )
 			VAR _answered =
 			    SUM ( fact_teach[option1] ) + SUM ( fact_teach[option2] ) + SUM ( fact_teach[option3] )
@@ -44,12 +14,6 @@ table fact_teach
 		displayFolder: Core
 		lineageTag: 7ef2dfd9-1bda-4902-a035-2af5a48bd012
 
-	/// Respondents who answered the question, summed over the rows in context (can be fractional where multi-subject students are split). Needs exactly one question in context, because summing across questions would count each student once per question.
-	measure Responses = IF ( HASONEVALUE ( dim_theme_question[question_no] ), SUM ( fact_teach[number_responses] ) )
-		formatString: #,0
-		displayFolder: Core
-		lineageTag: 7c982456-449f-4f6d-9efe-6cf33b706738
-
 	/// Published survey response headcount (whole students, all questions), counted once per provider x mode x level x subject group rather than once per question. Summed over subjects, a student on a multi-subject course counts once per subject.
 	measure 'Response headcount' =
 			VAR _groups =
@@ -59,16 +23,6 @@ table fact_teach
 		formatString: #,0
 		displayFolder: Core
 		lineageTag: b9acbc48-227b-42b3-b7a9-ffc8f023fe8f
-
-	/// Students surveyed (target population, fractional where multi-subject students are split), counted once per provider x mode x level x subject group rather than once per question.
-	measure Population =
-			VAR _groups =
-			    SUMMARIZE ( fact_teach, fact_teach[ukprn], fact_teach[mode_of_study], fact_teach[level_of_study], fact_teach[cah_code] )
-			RETURN
-			    SUMX ( _groups, CALCULATE ( MAX ( fact_teach[number_population] ) ) )
-		formatString: #,0
-		displayFolder: Core
-		lineageTag: dca5b19a-140f-455e-a1fd-ca5a3096a48d
 
 	/// Survey response rate. For one provider x mode x level x subject group it equals the published pub_resprate. For several groups it is pooled (derived): total response headcount / total survey population, where each group's survey population in whole students is headcount / published rate. Groups with a 0% rate are skipped.
 	measure 'Response rate %' =
@@ -86,63 +40,6 @@ table fact_teach
 		formatString: 0.0%
 		displayFolder: Core
 		lineageTag: 6c221da0-be9b-439f-a43d-1ae5a1dd69e0
-
-	/// Above / Below / In line with benchmark, using the OfS materiality columns and the selected Confidence threshold (default 90): above or below means a difference of more than 2.5 pts from benchmark with at least that much statistical confidence. 'Not assessed' where the materiality columns are blank. Single fact row only.
-	measure 'Benchmark category' =
-			VAR _t = [Confidence threshold Value]
-			RETURN
-			    IF (
-			        COUNTROWS ( fact_teach ) = 1,
-			        VAR _above = MAX ( fact_teach[materially_above_bench] )
-			        VAR _below = MAX ( fact_teach[materially_below_bench] )
-			        RETURN
-			            SWITCH (
-			                TRUE (),
-			                ISBLANK ( _above ), "Not assessed",
-			                _above >= _t, "Above benchmark",
-			                _below >= _t, "Below benchmark",
-			                "In line with benchmark"
-			            )
-			    )
-		displayFolder: Significance
-		lineageTag: 522ae1f4-3790-4cac-b664-c53c5d9b0348
-
-	/// Numeric sort key for Benchmark category: 1 Above, 2 In line with, 3 Below benchmark, 4 Not assessed.
-	measure 'Benchmark category sort' =
-			SWITCH (
-			    [Benchmark category],
-			    "Above benchmark", 1,
-			    "In line with benchmark", 2,
-			    "Below benchmark", 3,
-			    "Not assessed", 4
-			)
-		formatString: 0
-		displayFolder: Significance
-		lineageTag: 8d701a57-f667-4369-a4da-b4719d4129f0
-
-	/// Hex colour for conditional formatting by Benchmark category (colour-blind safe): above #1F4E79, below #C45A12, in line #A6A6A6, not assessed #D9D9D9.
-	measure 'Benchmark category colour' =
-			SWITCH (
-			    [Benchmark category],
-			    "Above benchmark", "#1F4E79",
-			    "Below benchmark", "#C45A12",
-			    "In line with benchmark", "#A6A6A6",
-			    "Not assessed", "#D9D9D9"
-			)
-		displayFolder: Significance
-		lineageTag: 50cf2705-955f-475f-b6cd-7689d0ee36f8
-
-	/// Non-colour cue for Benchmark category, so colour is never the only signal: ▲ above, ▼ below, ● in line, ○ not assessed.
-	measure 'Benchmark category marker' =
-			SWITCH (
-			    [Benchmark category],
-			    "Above benchmark", "▲",
-			    "Below benchmark", "▼",
-			    "In line with benchmark", "●",
-			    "Not assessed", "○"
-			)
-		displayFolder: Significance
-		lineageTag: c2889bc2-c65b-4da2-9108-4489f3187ca3
 
 	/// Number of published results (fact rows) in context above benchmark at the selected Confidence threshold. With one provider, mode, level and subject selected this is a count of questions; with more selected it counts every provider x mode x level x subject x question result.
 	measure 'Questions above benchmark' =
@@ -168,269 +65,11 @@ table fact_teach
 		displayFolder: Significance
 		lineageTag: 1db1b03f-9cbc-41a0-98eb-b82387c1252c
 
-	/// Number of assessed results (fact rows) in context neither above nor below benchmark at the selected Confidence threshold. Excludes 'Not assessed'.
-	measure 'Questions in line with benchmark' =
-			VAR _t = [Confidence threshold Value]
-			RETURN
-			    IF (
-			        NOT ISEMPTY ( fact_teach ),
-			        CALCULATE (
-			            COUNTROWS ( fact_teach ),
-			            NOT ISBLANK ( fact_teach[materially_above_bench] ),
-			            fact_teach[materially_above_bench] < _t,
-			            fact_teach[materially_below_bench] < _t
-			        ) + 0
-			    )
-		formatString: #,0
-		displayFolder: Significance
-		lineageTag: bd834ef8-1ad9-4d0b-aace-b2c4c1e477e3
-
-	/// Number of results (fact rows) in context with no benchmark assessment (materiality columns blank).
-	measure 'Questions not assessed' =
-			IF (
-			    NOT ISEMPTY ( fact_teach ),
-			    CALCULATE ( COUNTROWS ( fact_teach ), ISBLANK ( fact_teach[materially_above_bench] ) ) + 0
-			)
-		formatString: #,0
-		displayFolder: Significance
-		lineageTag: 81d4d3f2-fabf-4091-81a8-261a6f4835c1
-
-	/// 1 when the result rests on fewer responses than the selected Reliability threshold (placeholder default 30, to be set by the team), else 0. Single fact row only. Low-reliability results are shown faded, not hidden.
-	measure 'Low responses flag' =
-			IF (
-			    COUNTROWS ( fact_teach ) = 1,
-			    IF ( MAX ( fact_teach[number_responses] ) < [Reliability threshold Value], 1, 0 )
-			)
-		formatString: 0
-		displayFolder: Reliability
-		lineageTag: 543e7551-2b65-4bed-81c8-c0bd26308de2
-
-	/// 1 when the provider contributes more than 50% of its own benchmark population (contr_benchmark > 50), so the benchmark comparison is weak; else 0. Single fact row only.
-	measure 'Self-benchmarked flag' =
-			IF (
-			    COUNTROWS ( fact_teach ) = 1,
-			    IF ( MAX ( fact_teach[contr_benchmark] ) > 50, 1, 0 )
-			)
-		formatString: 0
-		displayFolder: Reliability
-		lineageTag: 8a3a0f45-b72a-4005-9334-662d3e588924
-
-	/// 1 when either the Low responses flag or the Self-benchmarked flag is set; else 0. Single fact row only.
-	measure 'Low reliability flag' =
-			IF (
-			    COUNTROWS ( fact_teach ) = 1,
-			    MAX ( [Low responses flag], [Self-benchmarked flag] )
-			)
-		formatString: 0
-		displayFolder: Reliability
-		lineageTag: f28e90f4-e1b3-47a4-a179-2ea571692d4a
-
-	/// Opacity helper for visuals: 0.35 for low-reliability results (low responses or self-benchmarked), 1 otherwise. Single fact row only.
-	measure 'Reliability opacity' = SWITCH ( [Low reliability flag], 1, 0.35, 0, 1 )
-		formatString: 0.00
-		displayFolder: Reliability
-		lineageTag: 73e8230c-3967-4e2e-baef-476d21a6e3a0
-
-	/// Benchmark category colour with about 35% opacity (hex alpha 59) for low-reliability results, full colour otherwise. Use for conditional formatting so low-reliability results are faded, not hidden.
-	measure 'Benchmark category colour (faded)' =
-			VAR _colour = [Benchmark category colour]
-			RETURN
-			    IF ( NOT ISBLANK ( _colour ), _colour & IF ( [Low reliability flag] = 1, "59", "" ) )
-		displayFolder: Reliability
-		lineageTag: e8d59112-c16e-460b-967b-c4a9301e1bdd
-
-	/// Share of respondents choosing the most positive option (option1) on the 4-option questions, pooled from option counts over the rows in context. Q28 (5-point scale) is excluded.
-	measure 'Option 1 share %' =
-			VAR _o1 = CALCULATE ( SUM ( fact_teach[option1] ), KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" ) )
-			VAR _answered =
-			    CALCULATE (
-			        SUM ( fact_teach[option1] ) + SUM ( fact_teach[option2] ) + SUM ( fact_teach[option3] ) + SUM ( fact_teach[option4] ),
-			        KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" )
-			    )
-			RETURN
-			    DIVIDE ( _o1, _answered )
-		formatString: 0.0%
-		displayFolder: Distribution
-		lineageTag: ab6e68c0-276e-4f3b-ba0a-84fd339f98f8
-
-	/// Share of respondents choosing the second option (option2) on the 4-option questions, pooled from option counts over the rows in context. Q28 excluded.
-	measure 'Option 2 share %' =
-			VAR _o2 = CALCULATE ( SUM ( fact_teach[option2] ), KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" ) )
-			VAR _answered =
-			    CALCULATE (
-			        SUM ( fact_teach[option1] ) + SUM ( fact_teach[option2] ) + SUM ( fact_teach[option3] ) + SUM ( fact_teach[option4] ),
-			        KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" )
-			    )
-			RETURN
-			    DIVIDE ( _o2, _answered )
-		formatString: 0.0%
-		displayFolder: Distribution
-		lineageTag: fcb17d5e-bfba-4531-956a-cc5171a892a7
-
-	/// Share of respondents choosing a negative option (option3 + option4) on the 4-option questions, pooled from option counts over the rows in context. Q28 excluded.
-	measure 'Negative share %' =
-			VAR _negative =
-			    CALCULATE ( SUM ( fact_teach[option3] ) + SUM ( fact_teach[option4] ), KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" ) )
-			VAR _answered =
-			    CALCULATE (
-			        SUM ( fact_teach[option1] ) + SUM ( fact_teach[option2] ) + SUM ( fact_teach[option3] ) + SUM ( fact_teach[option4] ),
-			        KEEPFILTERS ( dim_theme_question[question_no] <> "Q28" )
-			    )
-			RETURN
-			    DIVIDE ( _negative, _answered )
-		formatString: 0.0%
-		displayFolder: Distribution
-		lineageTag: 918f7813-9e48-48a2-91ec-e4ac19b89aa3
-
-	/// 'This does not apply to me' responses as a share of all responses including them (not_applicable / (option1..option5 + not_applicable)), pooled over the rows in context.
-	measure 'Not applicable %' =
-			VAR _na = SUM ( fact_teach[not_applicable] )
-			VAR _answered =
-			    SUM ( fact_teach[option1] ) + SUM ( fact_teach[option2] ) + SUM ( fact_teach[option3] )
-			        + SUM ( fact_teach[option4] ) + SUM ( fact_teach[option5] )
-			RETURN
-			    DIVIDE ( _na, _answered + _na )
-		formatString: 0.0%
-		displayFolder: Distribution
-		lineageTag: d5238edd-9271-41bb-bf14-c2d8dba8a95d
-
-	/// SECTOR MEASURE. The provider's rank on published positivity (1 = highest) among all providers with a published row for the same mode x level x subject x question. Removes the provider filter explicitly. Single fact row only. Exclude Q27/Q28 from cross-question rankings (applicability-limited).
-	measure 'Provider rank (positivity)' =
-			IF (
-			    COUNTROWS ( fact_teach ) = 1,
-			    VAR _value = MAX ( fact_teach[positivity_measure] )
-			    RETURN
-			        CALCULATE ( COUNTROWS ( fact_teach ), REMOVEFILTERS ( dim_provider ), fact_teach[positivity_measure] > _value ) + 1
-			)
-		formatString: 0
-		displayFolder: Sector
-		lineageTag: d41da089-6da6-42e6-9da9-16b8ded26fd8
-
-	/// SECTOR MEASURE. Share of the other providers with a published row for the same mode x level x subject x question whose published positivity is lower (100% = highest, 0% = lowest). Blank when there is no other provider to compare. Single fact row only.
-	measure 'Provider percentile (positivity)' =
-			IF (
-			    COUNTROWS ( fact_teach ) = 1,
-			    VAR _value = MAX ( fact_teach[positivity_measure] )
-			    VAR _peers = CALCULATE ( COUNTROWS ( fact_teach ), REMOVEFILTERS ( dim_provider ) )
-			    VAR _lower = CALCULATE ( COUNTROWS ( fact_teach ), REMOVEFILTERS ( dim_provider ), fact_teach[positivity_measure] < _value )
-			    RETURN
-			        IF ( _peers > 1, DIVIDE ( _lower + 0, _peers - 1 ) )
-			)
-		formatString: 0%
-		displayFolder: Sector
-		lineageTag: 1b3d0335-129c-400f-9398-7302dbdf28ad
-
-	/// SECTOR MEASURE. The provider's rank on published difference from benchmark (1 = furthest above) among all providers with a published row for the same mode x level x subject x question. Single fact row only.
-	measure 'Provider rank (difference)' =
-			IF (
-			    COUNTROWS ( fact_teach ) = 1,
-			    VAR _value = MAX ( fact_teach[difference] )
-			    RETURN
-			        CALCULATE ( COUNTROWS ( fact_teach ), REMOVEFILTERS ( dim_provider ), fact_teach[difference] > _value ) + 1
-			)
-		formatString: 0
-		displayFolder: Sector
-		lineageTag: 7fa3656a-dc34-42dc-8ec0-336e13480739
-
-	/// SECTOR MEASURE. Share of the other providers with a published row for the same mode x level x subject x question whose difference from benchmark is lower (100% = furthest above benchmark). Blank when there is no other provider to compare. Single fact row only.
-	measure 'Provider percentile (difference)' =
-			IF (
-			    COUNTROWS ( fact_teach ) = 1,
-			    VAR _value = MAX ( fact_teach[difference] )
-			    VAR _peers = CALCULATE ( COUNTROWS ( fact_teach ), REMOVEFILTERS ( dim_provider ) )
-			    VAR _lower = CALCULATE ( COUNTROWS ( fact_teach ), REMOVEFILTERS ( dim_provider ), fact_teach[difference] < _value )
-			    RETURN
-			        IF ( _peers > 1, DIVIDE ( _lower + 0, _peers - 1 ) )
-			)
-		formatString: 0%
-		displayFolder: Sector
-		lineageTag: 96dd15c4-0e9f-410a-9a2a-2af77a6695dc
-
-	/// SECTOR MEASURE. Median published positivity across all providers with a published row for the same mode x level x subject x question (provider filter removed explicitly; not a sum across providers). Needs exactly one mode, level of study, subject code and question in context.
-	measure 'Sector median positivity %' =
-			VAR _ok =
-			    HASONEVALUE ( dim_mode[mode_of_study] )
-			        && HASONEVALUE ( dim_level[level_of_study] )
-			        && HASONEVALUE ( dim_cah[cah_code] )
-			        && HASONEVALUE ( dim_theme_question[question_no] )
-			RETURN
-			    IF ( _ok, CALCULATE ( MEDIAN ( fact_teach[positivity_measure] ), REMOVEFILTERS ( dim_provider ) ) / 100 )
-		formatString: 0.0%
-		displayFolder: Sector
-		lineageTag: 4604e098-1dac-473b-a656-0891f8f3747d
-
-	/// SECTOR MEASURE. Number of providers with a published row for the same mode x level x subject x question. Show alongside ranks and percentiles: small subjects have few peers. Needs exactly one mode, level of study, subject code and question in context.
-	measure 'Providers compared' =
-			VAR _ok =
-			    HASONEVALUE ( dim_mode[mode_of_study] )
-			        && HASONEVALUE ( dim_level[level_of_study] )
-			        && HASONEVALUE ( dim_cah[cah_code] )
-			        && HASONEVALUE ( dim_theme_question[question_no] )
-			RETURN
-			    IF ( _ok, CALCULATE ( COUNTROWS ( fact_teach ), REMOVEFILTERS ( dim_provider ) ) )
-		formatString: #,0
-		displayFolder: Sector
-		lineageTag: f5630206-c159-421c-ada1-0b4bc39c6fb5
-
 	/// Estimates how many more students would need to respond positively to reach benchmark: number_population x -MIN(difference, 0) / 100, calculated per result row and summed. When rolled up over several questions one student can count on several questions.
 	measure 'Students below benchmark (est.)' = SUMX ( fact_teach, fact_teach[number_population] * MAX ( -fact_teach[difference], 0 ) / 100 )
 		formatString: #,0
 		displayFolder: Priority
 		lineageTag: 575f834e-db1c-4571-8a1d-ccc8c0b01575
-
-	/// Number of CAH1 subject areas with at least one published CAH3 result in the current context. Counts what was published; unpublished and suppressed combinations are not in the data.
-	measure 'Subjects published (CAH1)' = DISTINCTCOUNT ( fact_teach[cah1_code] )
-		formatString: #,0
-		displayFolder: Coverage
-		lineageTag: e10b5eb0-dcd9-4017-a23a-25c69a4b2d1e
-
-	/// Number of CAH2 subject groups with at least one published CAH3 result in the current context.
-	measure 'Subjects published (CAH2)' = DISTINCTCOUNT ( fact_teach[cah2_code] )
-		formatString: #,0
-		displayFolder: Coverage
-		lineageTag: 123ca863-ce47-44b5-a939-4248b50e39f6
-
-	/// Number of CAH3 subjects with at least one published result in the current context.
-	measure 'Subjects published (CAH3)' = DISTINCTCOUNT ( fact_teach[cah_code] )
-		formatString: #,0
-		displayFolder: Coverage
-		lineageTag: 62663c23-19ab-4535-924e-ca306aaa881d
-
-	/// Number of distinct questions with at least one published result in the current context.
-	measure 'Questions published' = DISTINCTCOUNT ( fact_teach[question_no] )
-		formatString: #,0
-		displayFolder: Coverage
-		lineageTag: 9369568a-97ce-45a3-ae2f-abfb3c379032
-
-	/// Number of published results (fact rows) in context that are low-reliability: fewer responses than the selected Reliability threshold, or self-benchmarked (contr_benchmark > 50).
-	measure 'Results flagged low-reliability' =
-			VAR _t = [Reliability threshold Value]
-			RETURN
-			    IF (
-			        NOT ISEMPTY ( fact_teach ),
-			        COUNTROWS ( FILTER ( fact_teach, fact_teach[number_responses] < _t || fact_teach[contr_benchmark] > 50 ) ) + 0
-			    )
-		formatString: #,0
-		displayFolder: Coverage
-		lineageTag: ac872348-4fde-4912-b587-2aa8fff7859c
-
-	/// Share of assessed results (provider x subject x mode x level x question rows in context) that are above benchmark at the selected Confidence threshold. Denominator excludes 'Not assessed', so Above, In line and Below sum to 100%.
-	measure 'Above benchmark %' = DIVIDE ( [Questions above benchmark], [Questions above benchmark] + [Questions in line with benchmark] + [Questions below benchmark] )
-		formatString: 0.0%
-		displayFolder: Significance
-		lineageTag: 8f25c5dd-2af6-4dc7-b9ce-f4e5be4f5d8e
-
-	/// Share of assessed results in context that are in line with benchmark at the selected Confidence threshold. Denominator excludes 'Not assessed'.
-	measure 'In line with benchmark %' = DIVIDE ( [Questions in line with benchmark], [Questions above benchmark] + [Questions in line with benchmark] + [Questions below benchmark] )
-		formatString: 0.0%
-		displayFolder: Significance
-		lineageTag: 2ec2d27b-4ea2-42ae-8587-b01cc7b965b5
-
-	/// Share of assessed results in context that are below benchmark at the selected Confidence threshold. Denominator excludes 'Not assessed'.
-	measure 'Below benchmark %' = DIVIDE ( [Questions below benchmark], [Questions above benchmark] + [Questions in line with benchmark] + [Questions below benchmark] )
-		formatString: 0.0%
-		displayFolder: Significance
-		lineageTag: eab5bb18-70b0-452c-ad54-f708bf7a127e
 
 	/// UK Provider Reference Number. FK to dim_provider.
 	column ukprn

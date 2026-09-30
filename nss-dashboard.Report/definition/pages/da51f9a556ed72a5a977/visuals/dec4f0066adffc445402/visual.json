@@ -4,13 +4,13 @@
   "position": {
     "x": 16,
     "y": 180,
-    "width": 410,
-    "height": 532,
     "z": 14000,
+    "height": 532,
+    "width": 410,
     "tabOrder": 14000
   },
   "visual": {
-    "visualType": "clusteredBarChart",
+    "visualType": "barChart",
     "query": {
       "queryState": {
         "Category": {
@@ -28,8 +28,8 @@
               },
               "queryRef": "dim_cah.cah1_name",
               "nativeQueryRef": "cah1_name",
-              "displayName": "Subject area",
-              "active": true
+              "active": true,
+              "displayName": "Subject area"
             },
             {
               "field": {
@@ -44,8 +44,8 @@
               },
               "queryRef": "dim_cah.cah2_name",
               "nativeQueryRef": "cah2_name",
-              "displayName": "Subject group",
-              "active": false
+              "active": false,
+              "displayName": "Subject group"
             },
             {
               "field": {
@@ -60,8 +60,8 @@
               },
               "queryRef": "dim_cah.cah_name",
               "nativeQueryRef": "cah_name",
-              "displayName": "Subject",
-              "active": false
+              "active": false,
+              "displayName": "Subject"
             }
           ]
         },
@@ -108,30 +108,13 @@
                 "Function": 1
               }
             },
-            "direction": "Ascending"
+            "direction": "Descending"
           }
         ],
         "isDefaultSort": true
       }
     },
     "objects": {
-      "dataPoint": [
-        {
-          "properties": {
-            "defaultColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#5B8DB8'"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ],
       "error": [
         {
           "properties": {
@@ -199,7 +182,7 @@
             "enabled": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },
@@ -300,6 +283,23 @@
             }
           }
         }
+      ],
+      "dataPoint": [
+        {
+          "properties": {
+            "defaultColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#1F4E79'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "visualContainerObjects": {
@@ -320,10 +320,49 @@
                 }
               }
             },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI Semibold'''"
+                }
+              }
+            },
             "fontSize": {
               "expr": {
                 "Literal": {
                   "Value": "10D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#000000'"
+                    }
+                  }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'left'"
+                }
+              }
+            },
+            "titleWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
@@ -343,7 +382,14 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Average difference (pts) · black lines = average 95% CI · drill CAH1 → CAH2 → CAH3'"
+                  "Value": "'Average difference (pts) coloured by subject area · black lines = average 95% CI · drill CAH1 → CAH3'"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'''Segoe UI'''"
                 }
               }
             },
@@ -351,6 +397,31 @@
               "expr": {
                 "Literal": {
                   "Value": "8D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#8C8C8C'"
+                    }
+                  }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'left'"
+                }
+              }
+            },
+            "titleWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             }
@@ -406,7 +477,7 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#D9D9D9'"
+                      "Value": "'#EBEBEB'"
                     }
                   }
                 }
@@ -422,7 +493,7 @@
             "radius": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "6D"
                 }
               }
             }
