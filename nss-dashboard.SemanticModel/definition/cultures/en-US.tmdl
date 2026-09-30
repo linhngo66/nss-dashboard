@@ -5397,7 +5397,7 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "fact_teach.positivity__derived": {
+			    "fact_teach.positivity_": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "fact_teach",
@@ -5407,34 +5407,28 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "positivity % (derived)": {
+			          "positivity %": {
 			            "State": "Generated"
 			          }
 			        },
 			        {
-			          "positivity %": {
-			            "State": "Generated",
+			          "positivity percentage": {
+			            "Type": "Noun",
+			            "State": "Suggested",
+			            "Source": {
+			              "Agent": "Thesaurus"
+			            },
 			            "Weight": 0.75
 			          }
 			        },
 			        {
-			          "positivity percentage (derived)": {
+			          "positivity pct": {
 			            "Type": "Noun",
 			            "State": "Suggested",
 			            "Source": {
 			              "Agent": "Thesaurus"
 			            },
-			            "Weight": 0.624
-			          }
-			        },
-			        {
-			          "positivity pct (derived)": {
-			            "Type": "Noun",
-			            "State": "Suggested",
-			            "Source": {
-			              "Agent": "Thesaurus"
-			            },
-			            "Weight": 0.605
+			            "Weight": 0.727
 			          }
 			        }
 			      ]
@@ -9595,7 +9589,7 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "fact_teach_has_positivity__derived": {
+			    "fact_teach_has_positivity_": {
 			      "Binding": {
 			        "ConceptualEntity": "fact_teach"
 			      },
@@ -9606,9 +9600,9 @@ cultureInfo en-US
 			            "Entity": "fact_teach"
 			          }
 			        },
-			        "fact_teach.positivity__derived": {
+			        "fact_teach.positivity_": {
 			          "Target": {
-			            "Entity": "fact_teach.positivity__derived"
+			            "Entity": "fact_teach.positivity_"
 			          }
 			        }
 			      },
@@ -9619,12 +9613,12 @@ cultureInfo en-US
 			              "Role": "fact_teach"
 			            },
 			            "Object": {
-			              "Role": "fact_teach.positivity__derived"
+			              "Role": "fact_teach.positivity_"
 			            }
 			          },
 			          "State": "Generated",
 			          "Weight": 0.99,
-			          "ID": "fact_teach_have_positivity__derived"
+			          "ID": "fact_teach_have_positivity_"
 			        }
 			      ]
 			    },

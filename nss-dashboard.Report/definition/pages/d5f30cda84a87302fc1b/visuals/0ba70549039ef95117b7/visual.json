@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
-  "name": "fbe8815c82019b168e2d",
+  "name": "0ba70549039ef95117b7",
   "position": {
-    "x": 15.828524319868096,
-    "y": 9.4971145919208571,
-    "z": 1000,
-    "height": 30.601813685078319,
-    "width": 417.87304204451772,
-    "tabOrder": 1000
+    "x": 16,
+    "y": 714,
+    "width": 1248,
+    "height": 20,
+    "z": 17001,
+    "tabOrder": 17001
   },
   "visual": {
     "visualType": "textbox",
@@ -19,11 +19,21 @@
               {
                 "textRuns": [
                   {
-                    "value": "Overview - NSS Student Survey 2025",
+                    "value": "Source: Office for Students, National Student Survey provider-level data · ",
                     "textStyle": {
-                      "fontFamily": "Segoe UI Semibold",
-                      "fontSize": "16pt",
-                      "color": "#ffffff"
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "8pt",
+                      "color": "#8C8C8C"
+                    }
+                  },
+                  {
+                    "value": "officeforstudents.org.uk/data-and-analysis/national-student-survey-data",
+                    "url": "https://www.officeforstudents.org.uk/data-and-analysis/national-student-survey-data/",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "8pt",
+                      "color": "#006DAE",
+                      "textDecoration": "underline"
                     }
                   }
                 ]
@@ -100,7 +110,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Page title: Overview'"
+                  "Value": "'Data source: Office for Students National Student Survey data (link)'"
                 }
               }
             }

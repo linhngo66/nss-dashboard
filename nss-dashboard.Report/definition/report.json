@@ -11,7 +11,7 @@
       "type": "SharedResources"
     },
     "customTheme": {
-      "name": "MonashNSS-bafc13c3.json3292586245310587.json",
+      "name": "MonashNSS-76f1ba30.json",
       "reportVersionAtImport": {
         "visual": "2.13.0",
         "report": "3.4.0",
@@ -121,6 +121,13 @@
                 "Value": "false"
               }
             }
+          },
+          "visible": {
+            "expr": {
+              "Literal": {
+                "Value": "false"
+              }
+            }
           }
         }
       }
@@ -143,8 +150,8 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "MonashNSS-bafc13c3.json3292586245310587.json",
-          "path": "MonashNSS-bafc13c3.json3292586245310587.json",
+          "name": "MonashNSS-76f1ba30.json",
+          "path": "MonashNSS-76f1ba30.json",
           "type": "CustomTheme"
         }
       ]

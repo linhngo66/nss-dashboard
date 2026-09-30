@@ -48,7 +48,7 @@
               },
               "queryRef": "dim_cah.cah1_name",
               "nativeQueryRef": "cah1_name",
-              "active": true,
+              "active": false,
               "displayName": "Subject"
             },
             {
@@ -80,7 +80,7 @@
               },
               "queryRef": "dim_cah.cah_name",
               "nativeQueryRef": "cah_name",
-              "active": false,
+              "active": true,
               "displayName": "CAH3"
             }
           ]
