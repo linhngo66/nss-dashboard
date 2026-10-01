@@ -11,3 +11,7 @@ data/raw/
 # Quarto preview output
 portfolio/*.html
 portfolio/*_files/
+
+# Local working notes (kept out of the public repo)
+CLAUDE.md
+context/

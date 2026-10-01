@@ -20,10 +20,6 @@ nss-dashboard/
 │       └── dim_*.csv             #   provider, mode, level, subject (CAH), theme/question
 ├── scripts/
 │   └── clean.R                   # Raw CSVs → data/clean
-├── context/
-│   ├── data_dictionary.md        # Tables, relationships and aggregation rules
-│   ├── powerbi-instruction.md    # Report brief: analytical questions and design conventions
-│   └── mockups/                  # Early page mockup
 ├── nss-dashboard.pbip            # Power BI project: open this in Power BI Desktop
 ├── nss-dashboard.SemanticModel/  # Model definition (TMDL): tables, relationships, DAX measures
 ├── nss-dashboard.Report/         # Report definition (PBIR): pages, visuals, theme
