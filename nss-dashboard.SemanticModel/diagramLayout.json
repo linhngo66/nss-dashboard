@@ -88,8 +88,8 @@
         },
         {
           "location": {
-            "x": 859.49762899336019,
-            "y": 243.39684904521744
+            "x": 988.97076553136674,
+            "y": 238.36876607286769
           },
           "nodeIndex": "Confidence threshold",
           "nodeLineageTag": "4c770ab8-d54b-485f-b6c1-adde546f0977",
@@ -114,7 +114,7 @@
         }
       ],
       "name": "All tables",
-      "zoomValue": 100,
+      "zoomValue": 79.553182037699813,
       "pinKeyFieldsToTop": false,
       "showExtraHeaderInfo": false,
       "hideKeyFieldsWhenCollapsed": false,

@@ -1,2 +1,13 @@
 # Temporary report validation screenshots (contain report data)
 context/screenshots/
+
+# Raw OfS downloads (too large for GitHub; see README)
+data/raw/
+
+# Power BI Desktop local state
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+
+# Quarto preview output
+portfolio/*.html
+portfolio/*_files/
